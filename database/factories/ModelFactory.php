@@ -51,6 +51,7 @@ $factory->define(App\Zona::class, function (Faker\Generator $faker) {
 
 $factory->define(App\Guia::class, function () {
 
+	/* :( */
 	$zone = App\Zona::inRandomOrder()->first()->id;
 	$lang = App\Idioma::inRandomOrder()->first()->id;
 
@@ -60,4 +61,20 @@ $factory->define(App\Guia::class, function () {
 		'idiomas_id' => $lang
 	];
 
+});
+
+$factory->define(App\User::class, function(Faker\Generator $faker) {
+
+	/* Un poco feo esto */
+	$type = App\User_type::inRandomOrder()->first()->id;
+	$page = App\Page::inRandomOrder()->first()->id;
+
+	return [
+		'name' => $faker->name,
+		'email' => $faker->email,
+		'password' => $faker->password,
+		'user_types_id' => $type,
+		'pages_id' => $page,
+		'monedas' => rand() % 1000
+	];
 });

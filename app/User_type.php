@@ -6,15 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class User_type extends Model
 {
-    public function store(Request $request)
+    public static function store($type)
     {
-        
-        $user_type = new user_type;
-
-        $user_type->type = $request->type;
-
+        $user_type = new User_type;
+        $user_type->type = $type;
         $user_type->save();
- 
     }
 
 }
