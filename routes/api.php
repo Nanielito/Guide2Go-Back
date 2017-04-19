@@ -19,3 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('user', 'UserController', ['only' => ['show', 'store' , 'update', 'destroy', 'index' ], 
 	'parameters' => ['user' => 'id']]);
+
+Route::post('/login','LoginController@validationGuide');

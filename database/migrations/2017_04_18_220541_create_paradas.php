@@ -19,10 +19,10 @@ class CreateParadas extends Migration
             $table->string('nombre');
             $table->string('foto');
             $table->string('audio');
-            $table->integer('sub-zonas_id')->unsigned();
+            $table->integer('sub_zonas_id')->unsigned();
             $table->point('punto');
 
-            $table->foreign('sub_zonas_id')->references('id')->on('sub-zonas');
+            $table->foreign('sub_zonas_id')->references('id')->on('sub_zonas');
             $table->timestamps();
         });
     }

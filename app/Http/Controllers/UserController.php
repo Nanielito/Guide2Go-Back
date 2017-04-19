@@ -8,7 +8,7 @@ class UserController extends Controller
 {
 
     // Añadir token para impedir bielorusos
-    
+
     /**
      * Display a listing of the resource.
      * @param  \Illuminate\Http\Request  $request
