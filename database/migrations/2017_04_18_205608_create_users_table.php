@@ -20,11 +20,14 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->integer('user_types_id')->unsigned();
             $table->integer('pages_id')->unsigned();
+            $table->integer('referer_id')->unsigned()->nullable();
+            $table->integer('monedas');
             $table->rememberToken();
             $table->timestamps();
 
             $table->foreign('user_types_id')->references('id')->on('user_types');
             $table->foreign('pages_id')->references('id')->on('pages');
+            $table->foreign('referer_id')->references('id')->on('users');
         });
     }
 
