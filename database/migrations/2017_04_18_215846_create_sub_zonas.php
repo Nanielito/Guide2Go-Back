@@ -13,7 +13,7 @@ class CreateSubZonas extends Migration
      */
     public function up()
     {
-        Schema::create('sub-zonas', function (Blueprint $table) {
+        Schema::create('sub_zonas', function (Blueprint $table) {
             $table->increments('id');
             $table->polygon('poligono');
             $table->string('nombre')->nullable();
@@ -31,6 +31,6 @@ class CreateSubZonas extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('sub-zonas');
+        Schema::dropIfExists('sub_zonas');
     }
 }

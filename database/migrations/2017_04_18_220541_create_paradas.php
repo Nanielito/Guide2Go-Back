@@ -22,7 +22,7 @@ class CreateParadas extends Migration
             $table->integer('sub-zonas_id')->unsigned();
             $table->point('punto');
 
-            $table->foreign('sub-zonas_id')->references('id')->on('sub-zonas');
+            $table->foreign('sub_zonas_id')->references('id')->on('sub-zonas');
             $table->timestamps();
         });
     }

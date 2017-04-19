@@ -30,7 +30,7 @@ class User extends Authenticatable
      public function store(Request $request)
     {
         
-        $user = new user;
+        $user = new User;
 
         $user->name = $request->name;
         $user->email = $request->email;
