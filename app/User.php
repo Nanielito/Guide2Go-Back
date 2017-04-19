@@ -27,18 +27,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-     public function store(Request $request)
+    public function page()
     {
-        
-        $user = new User;
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->password = Hash::make($request->password);
-        $user->user_types_id = $request->user_types_id;
-        $user->pages_id = $request->pages_id;
-
-        $user->save();
- 
+        return $this->belongsTo('App\Page','pages_id');
     }
 }

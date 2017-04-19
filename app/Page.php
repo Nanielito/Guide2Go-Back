@@ -13,4 +13,9 @@ class Page extends Model
         $page->save();
 
     }
+
+    public function user()
+    {
+        return $this->hasMany('App\User','pages_id');
+    }
 }
