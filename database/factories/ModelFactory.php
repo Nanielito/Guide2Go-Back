@@ -1,5 +1,7 @@
 <?php
 
+use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -21,4 +23,41 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
     ];
+});
+
+$factory->define(App\Zona::class, function (Faker\Generator $faker) {
+
+	$points = [];
+	$maxPoints = rand() % 33 + 3;
+
+	for ($i=0; $i < $maxPoints; $i++) {
+		
+		$lat = $faker->latitude($min = -90, $max = 90);
+		$lng = $faker->longitude($min = -180, $max = 180);
+		
+		array_push($points, [$lat, $lng]);
+	}
+
+	/* Trampa de rosendo */
+	array_push($points, $points[0]);
+
+	$polygon = Polygon::fromArray([$points]);
+
+	return [
+		'name' => $faker->city,
+		'poligono' => $polygon
+	];
+});
+
+$factory->define(App\Guia::class, function () {
+
+	$zone = App\Zona::inRandomOrder()->first()->id;
+	$lang = App\Idioma::inRandomOrder()->first()->id;
+
+	return [
+		'costo' => rand() % 1000,
+		'zonas_id' => $zone,
+		'idiomas_id' => $lang
+	];
+
 });

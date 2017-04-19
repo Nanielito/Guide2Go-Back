@@ -6,14 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Page extends Model
 {
-    public function store(Request $request)
-    {
-        
-        $page = new page;
-
-        $page->name = $request->name;
-
+    public static function store($name) {
+    	
+    	$page = new Page;
+        $page->name = $name;
         $page->save();
- 
+
     }
 }
