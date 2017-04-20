@@ -17,7 +17,25 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('user', 'UserController', ['only' => ['show', 'store' , 'update', 'destroy', 'index' ], 
-	'parameters' => ['user' => 'id']]);
-
+/* Login */
 Route::post('/login','LoginController@validationGuide');
+
+/* Users */
+
+Route::resource('user', 'UserController', [
+		'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
+		'parameters' => ['user' => 'id']
+	]
+);
+
+/* Zonas */
+Route::resource('zona', 'ZoneController');
+
+/* Guias */
+Route::resource('guia', 'GuideController');
+
+/* Paradas */H
+Route::resource('parada', 'ParadaController');
+
+/* Sub Zonas */
+Route::resource('sub_zone', 'SubZoneController');
