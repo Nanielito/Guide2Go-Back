@@ -34,7 +34,7 @@ Route::resource('zona', 'ZoneController');
 /* Guias */
 Route::resource('guia', 'GuideController');
 
-/* Paradas */H
+/* Paradas */
 Route::resource('parada', 'ParadaController');
 
 /* Sub Zonas */
