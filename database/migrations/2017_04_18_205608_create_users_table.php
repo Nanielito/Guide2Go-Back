@@ -23,7 +23,7 @@ class CreateUsersTable extends Migration
             $table->integer('user_types_id')->unsigned();
             $table->integer('pages_id')->unsigned();
             $table->integer('referer_id')->unsigned()->nullable();
-            $table->integer('monedas');
+            $table->float('dolares');
             $table->rememberToken();
             $table->timestamps();
 

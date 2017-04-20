@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGuias extends Migration
+class CreateCategoriaParadaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,10 @@ class CreateGuias extends Migration
      */
     public function up()
     {
-        Schema::create('guias', function (Blueprint $table) {
+        Schema::create('categoria_paradas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('idiomas_id')->unsigned();
-            $table->float('costo');
+            $table->string('nombre');
             $table->timestamps();
-
-            $table->foreign('idiomas_id')->references('id')->on('idiomas');
         });
     }
 
@@ -30,6 +27,6 @@ class CreateGuias extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('guias');
+        Schema::dropIfExists('categoria_paradas');
     }
 }
