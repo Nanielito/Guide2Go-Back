@@ -11,4 +11,8 @@ class Sub_zona extends GeoModel
     	"polygons" => ['poligono']
     
     ];
+
+    public function paradas() {
+    	return $this->hasMany('App\Parada', 'sub_zonas_id');
+    }
 }

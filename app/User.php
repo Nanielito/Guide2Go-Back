@@ -29,6 +29,6 @@ class User extends Authenticatable
 
     public function page()
     {
-        return $this->belongsTo('App\Page','pages_id');
+        return $this->belongsTo('App\Page', 'pages_id');
     }
 }

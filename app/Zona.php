@@ -16,4 +16,8 @@ class Zona extends GeoModel
     public function guias() {
     	return $this->hasMany('App\Guia', 'zonas_id');
     }
+
+    public function subZonas() {
+    	return $this->hasMany('App\Sub_zona', 'zonas_id');
+    }
 }

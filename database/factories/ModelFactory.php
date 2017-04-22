@@ -66,13 +66,26 @@ $factory->define(App\User::class, function(Faker\Generator $faker) {
 });
 
 $factory->define(App\Sub_zona::class, function (Faker\Generator $faker) {
+	
 	$polygon = Geometry::randomPolygon(6, 3);
-	$zone = App\Zona::inRandomOrder()->first()->id;
 
 	return [
-		'zonas_id' => $zone,
 		'nombre' => $faker->streetName,
 		'poligono' => $polygon
+	];
+
+});
+
+$factory->define(App\Parada::class, function (Faker\Generator $faker) {
+
+	$category = App\Categoria::inRandomOrder()->first()->id;
+	$point = Geometry::randomPoint();
+
+	return [
+		'categoria_id' => $category,
+		'nombre' => $faker->streetName,
+		'descripcion' => $faker->text,
+		'punto' => $point
 	];
 
 });

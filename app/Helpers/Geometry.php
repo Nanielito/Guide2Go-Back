@@ -13,8 +13,8 @@ class Geometry {
 	 */
 	private static function randPointArray() {
 		$faker = \Faker\Factory::create();
-		$lat = $faker->latitude($min = 0, $max = 0);
-		$lng = $faker->longitude($min = 0, $max = 0);
+		$lat = $faker->latitude($min = -90, $max = 90);
+		$lng = $faker->longitude($min = -180, $max = 180);
 		return [$lat, $lng];
 	}
 
