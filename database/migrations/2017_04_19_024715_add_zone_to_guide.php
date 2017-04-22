@@ -13,7 +13,7 @@ class AddZoneToGuide extends Migration
      */
     public function up()
     {
-        Schema::table('guias', function(Blueprint $table) {
+        Schema::table('guias', function (Blueprint $table) {
 
             $table->integer('zonas_id')
                 ->unsigned()

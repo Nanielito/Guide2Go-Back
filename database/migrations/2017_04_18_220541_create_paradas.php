@@ -15,14 +15,17 @@ class CreateParadas extends Migration
     {
         Schema::create('paradas', function (Blueprint $table) {
             $table->increments('id');
-            $table->longText('descripcion');
-            $table->string('nombre');
             $table->integer('sub_zonas_id')->unsigned();
+            /* Id de categorias */
+
+            $table->string('nombre');
+            $table->longText('descripcion');
             $table->point('punto');
-            $table->integer('categoria_id')->unsigned();
 
             $table->foreign('sub_zonas_id')->references('id')->on('sub_zonas');
-            $table->foreign('categoria_id')->references('id')->on('categoria_paradas');
+
+            /* Clave foranea de categorias */
+            
             $table->timestamps();
         });
     }

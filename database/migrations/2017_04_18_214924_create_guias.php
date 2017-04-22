@@ -16,7 +16,7 @@ class CreateGuias extends Migration
         Schema::create('guias', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('idiomas_id')->unsigned();
-            $table->float('costo');
+            $table->decimal('costo', 32, 2);
             $table->timestamps();
 
             $table->foreign('idiomas_id')->references('id')->on('idiomas');

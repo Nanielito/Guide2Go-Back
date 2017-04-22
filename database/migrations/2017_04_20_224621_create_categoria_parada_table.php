@@ -18,6 +18,11 @@ class CreateCategoriaParadaTable extends Migration
             $table->string('nombre');
             $table->timestamps();
         });
+
+        Schema::table('paradas', function (Blueprint $table) {
+            $table->integer('categoria_id')->unsigned();
+            $table->foreign('categoria_id')->references('id')->on('categoria_paradas');
+        });
     }
 
     /**
@@ -27,6 +32,10 @@ class CreateCategoriaParadaTable extends Migration
      */
     public function down()
     {
+        Schema::table('paradas', function (Blueprint $table) {
+            $table->dropForeign('paradas_categoria_id_foreign');
+            $table->dropColumn('categoria_id');
+        });
         Schema::dropIfExists('categoria_paradas');
     }
 }

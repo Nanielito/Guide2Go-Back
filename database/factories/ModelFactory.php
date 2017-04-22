@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Geometry;
 use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
 
 /*
@@ -26,22 +27,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Zona::class, function (Faker\Generator $faker) {
-
-	$points = [];
-	$maxPoints = rand() % 33 + 3;
-
-	for ($i=0; $i < $maxPoints; $i++) {
-		
-		$lat = $faker->latitude($min = -90, $max = 90);
-		$lng = $faker->longitude($min = -180, $max = 180);
-		
-		array_push($points, [$lat, $lng]);
-	}
-
-	/* Trampa de rosendo */
-	array_push($points, $points[0]);
-
-	$polygon = Polygon::fromArray([$points]);
+	$polygon = Geometry::randomPolygon(33, 3);
 
 	return [
 		'name' => $faker->city,
@@ -75,6 +61,18 @@ $factory->define(App\User::class, function(Faker\Generator $faker) {
 		'password' => $faker->password,
 		'user_types_id' => $type,
 		'pages_id' => $page,
-		'monedas' => rand() % 1000
+		'dolares' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = NULL)
 	];
+});
+
+$factory->define(App\Sub_zona::class, function (Faker\Generator $faker) {
+	$polygon = Geometry::randomPolygon(6, 3);
+	$zone = App\Zona::inRandomOrder()->first()->id;
+
+	return [
+		'zonas_id' => $zone,
+		'nombre' => $faker->streetName,
+		'poligono' => $polygon
+	];
+
 });

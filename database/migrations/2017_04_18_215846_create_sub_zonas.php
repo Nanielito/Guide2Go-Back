@@ -15,9 +15,9 @@ class CreateSubZonas extends Migration
     {
         Schema::create('sub_zonas', function (Blueprint $table) {
             $table->increments('id');
-            $table->polygon('poligono');
-            $table->string('nombre')->nullable();
             $table->integer('zonas_id')->unsigned();
+            $table->string('nombre')->nullable();
+            $table->polygon('poligono');
             $table->timestamps();
 
             $table->foreign('zonas_id')->references('id')->on('zonas');

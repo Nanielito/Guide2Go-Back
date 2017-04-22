@@ -2,9 +2,13 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use ElevenLab\GeoLaravel\Eloquent\Model as GeoModel;
 
-class Sub_zona extends Model
+class Sub_zona extends GeoModel
 {
-    //
+    protected $geometries = [
+
+    	"polygons" => ['poligono']
+    
+    ];
 }
