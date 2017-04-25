@@ -15,7 +15,7 @@ class LoginController extends Controller
     	if(!empty($user))
     	{
 
-    		if($user->password == \Hash::make($request->password))
+    		if(\Hash::check($request->password, $user->password))
     		{
     			return $this->tokenCreation($user->id);
     		}

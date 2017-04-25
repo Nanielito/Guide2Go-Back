@@ -40,7 +40,7 @@ class UserController extends Controller
             }
             else
             {
-                $users = \App\User::where('referer_id',$request->referer_id);
+                $users = \App\User::all()->where('referer_id',$request->referer_id);
                 foreach($users as $user){
 
                     $response['users'][] = [
@@ -76,7 +76,41 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = new \App\User;
+
+        if(!empty($request->user_types_id) && !empty($request->pages_id) && !empty($request->name) && !empty($request->email)){
+          $statusCode = 201;
+          $response = [
+              'respuesta'  =>  "Creado usuario con exito"
+          ];
+
+          $users = \App\User::all()->where('email',$request->email)->where('pages_id',$request->pages_id);
+
+          if(empty($users->first())){
+            $user->user_types_id = $request->user_types_id;
+            $user->pages_id = $request->pages_id;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+            if(!empty($request->password)){$user->password = \Hash::make($request->password);}
+            $user->dolares = 0;
+            $user->save();
+          }
+          else{
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Ese Correo ya existe con la misma pagina"
+            ];
+          }
+        }
+        else{
+          $statusCode = 400;
+          $response = [
+              'error'  =>  "Faltaron Datos"
+          ];
+        }
+
+        return \Response::json($response, $statusCode);
     }
 
     /**
