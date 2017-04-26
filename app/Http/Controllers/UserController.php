@@ -19,7 +19,7 @@ class UserController extends Controller
         try {
             $statusCode = 200;
             $response = [
-              'users'  => []
+                'users'  => []
             ];
 
             if(empty($request->referer_id))
@@ -58,13 +58,13 @@ class UserController extends Controller
         catch (Exception $e){
             $statusCode = 400;
             $response = [
-              'error'  => "Algo paso"
+                'error'  => "Algo paso"
             ];
         }
         finally{
             return \Response::json($response, $statusCode);
         }
-       
+
     }
 
 
@@ -78,36 +78,43 @@ class UserController extends Controller
     {
         $user = new \App\User;
 
-        if(!empty($request->user_types_id) && !empty($request->pages_id) && !empty($request->name) && !empty($request->email)){
-          $statusCode = 201;
-          $response = [
-              'respuesta'  =>  "Creado usuario con exito"
-          ];
-
-          $users = \App\User::all()->where('email',$request->email)->where('pages_id',$request->pages_id);
-
-          if(empty($users->first())){
-            $user->user_types_id = $request->user_types_id;
-            $user->pages_id = $request->pages_id;
-            $user->name = $request->name;
-            $user->email = $request->email;
-            if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
-            if(!empty($request->password)){$user->password = \Hash::make($request->password);}
-            $user->dolares = 0;
-            $user->save();
-          }
-          else{
-            $statusCode = 400;
+        if(
+            !empty($request->user_types_id) && 
+            !empty($request->pages_id) && 
+            !empty($request->name) && 
+            !empty($request->email))
+        {
+            $statusCode = 201;
             $response = [
-                'error'  =>  "Ese Correo ya existe con la misma pagina"
+                'respuesta'  =>  "Creado usuario con exito"
             ];
-          }
+
+            $users = \App\User::all()
+                ->where('email',$request->email)
+                ->where('pages_id',$request->pages_id);
+
+            if(empty($users->first())){
+                $user->user_types_id = $request->user_types_id;
+                $user->pages_id = $request->pages_id;
+                $user->name = $request->name;
+                $user->email = $request->email;
+                if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                if(!empty($request->password)){$user->password = \Hash::make($request->password);}
+                $user->dolares = 0;
+                $user->save();
+            }
+            else{
+                $statusCode = 400;
+                $response = [
+                    'error'  =>  "Ese Correo ya existe con la misma pagina"
+                ];
+            }
         }
         else{
-          $statusCode = 400;
-          $response = [
-              'error'  =>  "Faltaron Datos"
-          ];
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Faltaron Datos"
+            ];
         }
 
         return \Response::json($response, $statusCode);
@@ -121,38 +128,38 @@ class UserController extends Controller
      */
     public function show($id)
     {
-         try {
+        try {
             $statusCode = 200;
             $response = [
-              'users'  => []
+                'users'  => []
             ];
 
             $user = \App\User::find($id);
 
             if(empty($user))
             {
-                 $response = [
+                $response = [
                     "error" => "Usuario no existe"
                 ];
                 $statusCode = 404;
             }
             else{
                 $response['users'][] = [
-                            'id' => $user->id,
-                            'name' => $user->name,
-                            'email' => $user->email,
-                            'monedas' => $user->monedas,
-                            'user_types_id' => $user->user_types_id,
-                            'pages_id' => $user->pages_id,
-                            'referer_id' => $user->referer_id
-                        ];
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'monedas' => $user->monedas,
+                    'user_types_id' => $user->user_types_id,
+                    'pages_id' => $user->pages_id,
+                    'referer_id' => $user->referer_id
+                ];
             }
 
         }
         catch(Exception $e) {
             $statusCode = 400;
             $response = [
-              'error'  => "Algo paso"
+                'error'  => "Algo paso"
             ];
         }
         finally {
@@ -183,14 +190,14 @@ class UserController extends Controller
         try {
             $statusCode = 200;
             $response = [
-              'users'  => "deleted"
+                'users'  => "deleted"
             ];
 
             $user = \App\User::find($id);
 
             if(empty($user))
             {
-                 $response = [
+                $response = [
                     "error" => "Usuario no existe"
                 ];
                 $statusCode = 404;
@@ -203,7 +210,7 @@ class UserController extends Controller
         catch(Exception $e) {
             $statusCode = 400;
             $response = [
-              'error'  => "no se pudo borrar"
+                'error'  => "no se pudo borrar"
             ];
         }
         finally {

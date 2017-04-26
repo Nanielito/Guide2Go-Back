@@ -18,7 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 /* Login */
-Route::post('/login','LoginController@validationGuide');
+Route::post('/login','LoginController@validationGuide')
+	->middleware('cors');
 
 /* Users */
 
