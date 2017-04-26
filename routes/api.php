@@ -22,13 +22,13 @@ Route::post('/login','LoginController@validationGuide')
 	->middleware('cors');
 
 /* Users */
-
+Route::group(['middleware' => 'cors'], function() {
 Route::resource('user', 'UserController', [
 		'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
 		'parameters' => ['user' => 'id']
 	]
 );
-
+});
 /* Zonas */
 Route::resource('zona', 'ZoneController');
 
