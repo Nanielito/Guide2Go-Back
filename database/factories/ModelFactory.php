@@ -14,18 +14,6 @@ use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
 |
 */
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
-$factory->define(App\User::class, function (Faker\Generator $faker) {
-    static $password;
-
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'password' => $password ?: $password = bcrypt('secret'),
-        'remember_token' => str_random(10),
-    ];
-});
-
 $factory->define(App\Zona::class, function (Faker\Generator $faker) {
 	$polygon = Geometry::randomPolygon(33, 3);
 
@@ -50,6 +38,7 @@ $factory->define(App\Guia::class, function () {
 });
 
 $factory->define(App\User::class, function(Faker\Generator $faker) {
+	static $password;
 
 	/* Un poco feo esto */
 	$type = App\User_type::inRandomOrder()->first()->id;
@@ -57,11 +46,12 @@ $factory->define(App\User::class, function(Faker\Generator $faker) {
 
 	return [
 		'name' => $faker->name,
-		'email' => $faker->email,
-		'password' => $faker->password,
+		'email' => $faker->unique()->safeEmail,
+		'password' => $password ?: $password = bcrypt('secret'),
 		'user_types_id' => $type,
 		'pages_id' => $page,
-		'dolares' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = NULL)
+		'dolares' => $faker->randomFloat($nbMaxDecimals = 2, $min = 0, $max = NULL),
+		'remember_token' => str_random(10),
 	];
 });
 
