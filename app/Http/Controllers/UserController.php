@@ -78,7 +78,7 @@ class UserController extends Controller
     {
         $user = new \App\User;
 
-        if(!empty($request->user_types_id) && !empty($request->pages_id) && !empty($request->name) && !empty($request->email)){
+        if(!empty($request->password) && !empty($request->name) && !empty($request->email)){
           $statusCode = 201;
           $response = [
               'respuesta'  =>  "Creado usuario con exito"
@@ -92,8 +92,10 @@ class UserController extends Controller
             $user->name = $request->name;
             $user->email = $request->email;
             if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
-            if(!empty($request->password)){$user->password = \Hash::make($request->password);}
+            $user->password = \Hash::make($request->password)
             $user->dolares = 0;
+            $user->user_types_id = 3;
+            $user->pages_id = 1;
             $user->save();
           }
           else{
