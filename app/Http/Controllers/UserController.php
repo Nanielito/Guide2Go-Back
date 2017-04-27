@@ -93,16 +93,25 @@ class UserController extends Controller
                 ->where('pages_id','1');
 
             if(empty($users->first())){
-                $user->user_types_id = $request->user_types_id;
-                $user->pages_id = $request->pages_id;
-                $user->name = $request->name;
-                $user->email = $request->email;
-                if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
-                $user->password = \Hash::make($request->password);
-                $user->dolares = 0;
-                $user->user_types_id = 3;
-                $user->pages_id = 1;
-                $user->save();
+                $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
+                if($user->email != false)
+                {
+                  $user->user_types_id = $request->user_types_id;
+                  $user->pages_id = $request->pages_id;
+                  $user->name = $request->name;
+                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                  $user->password = \Hash::make($request->password);
+                  $user->dolares = 0;
+                  $user->user_types_id = 3;
+                  $user->pages_id = 1;
+                  $user->save();
+                }
+                else{
+                  $statusCode = 400;
+                $response = [
+                    'error'  =>  "Correo invalido"
+                ];
+                }
             }
             else{
                 $statusCode = 400;
