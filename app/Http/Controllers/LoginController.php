@@ -17,7 +17,7 @@ class LoginController extends Controller
 
 			if(\Hash::check($request->password, $user->password))
 			{
-				return $this->tokenCreation($user->id,$user->user_types_id,$user->name);
+				return $this->tokenCreation($user->id,$user->user_types_id,$user->name,$user->dolares);
 			}
 			else
 			{
@@ -37,9 +37,9 @@ class LoginController extends Controller
 		return \Response::json($response, $statusCode);
 	}
 
-	public function tokenCreation($id,$type,$name)
+	public function tokenCreation($id,$type,$name,$dolares)
 	{
-		$customClaims = ['sub' => $id, 'user_type' => $type, 'name' => $name];
+		$customClaims = ['sub' => $id, 'user_type' => $type, 'name' => $name, 'dolares' => $dolares];
 
 		$payload = \JWTFactory::make($customClaims);
 
