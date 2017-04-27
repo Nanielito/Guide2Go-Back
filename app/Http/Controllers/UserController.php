@@ -90,7 +90,7 @@ class UserController extends Controller
 
             $users = \App\User::all()
                 ->where('email',$request->email)
-                ->where('pages_id',$request->pages_id);
+                ->where('pages_id','1');
 
             if(empty($users->first())){
                 $user->user_types_id = $request->user_types_id;
