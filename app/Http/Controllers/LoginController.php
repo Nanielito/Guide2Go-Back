@@ -41,9 +41,9 @@ class LoginController extends Controller
 	{
 		$customClaims = ['sub' => $id, 'user_type' => $type, 'name' => $name];
 
-		$payload = JWTFactory::make($customClaims);
+		$payload = \JWTFactory::make($customClaims);
 
-		$token = JWTAuth::encode($payload);
+		$token = \JWTAuth::encode($payload);
 
 
 		//$payload = \JWTFactory::sub($id)->make();
