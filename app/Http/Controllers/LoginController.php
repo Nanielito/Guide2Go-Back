@@ -43,7 +43,7 @@ class LoginController extends Controller
 
 		$payload = \JWTFactory::make($customClaims);
 
-		$token = \JWTAuth::encode($payload);
+		$token = \JWTAuth::encode($payload)->get();
 
 
 		//$payload = \JWTFactory::sub($id)->make();
