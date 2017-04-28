@@ -22,12 +22,13 @@ class UserController extends Controller
 
     public function getUserFromToken()
     {
-        return \JWTAuth::parseToken()->authenticate()
+        return \JWTAuth::parseToken()->authenticate();
     }
 
     public function index(Request $request)
     {
-        try {
+        if(\JWTAuth::getToken() && $this->getUserFromToken()->user_types_id != 3){
+    
             $statusCode = 200;
             $response = [
                 'users'  => []
@@ -35,17 +36,25 @@ class UserController extends Controller
 
             if(empty($request->referer_id))
             {
-                $users = \App\User::all();
-                foreach($users as $user){
+                if($this->getUserFromToken()->user_types_id == 1){
+                    $users = \App\User::all();
+                    foreach($users as $user){
 
-                    $response['users'][] = [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'monedas' => $user->monedas,
-                        'user_types_id' => $user->user_types_id,
-                        'pages_id' => $user->pages_id,
-                        'referer_id' => $user->referer_id
+                        $response['users'][] = [
+                            'id' => $user->id,
+                            'name' => $user->name,
+                            'email' => $user->email,
+                            'monedas' => $user->monedas,
+                            'user_types_id' => $user->user_types_id,
+                            'pages_id' => $user->pages_id,
+                            'referer_id' => $user->referer_id
+                        ];
+                    }
+                }
+                else{
+                    $statusCode = 403;
+                    $response = [
+                        'error'  => "Sin autorizacion"
                     ];
                 }
             }
@@ -60,22 +69,234 @@ class UserController extends Controller
                         'email' => $user->email,
                         'monedas' => $user->monedas,
                         'user_types_id' => $user->user_types_id,
-                        'pages_id' => $user->pages_id,
-                        'referer_id' => $user->referer_id
+                        'pages_id' => $user->pages_id
                     ];
                 }
             }
         }
-        catch (Exception $e){
-            $statusCode = 400;
+        else{
+            $statusCode = 403;
             $response = [
-                'error'  => "Algo paso"
+                'error'  => "Sin autorizacion"
             ];
         }
-        finally{
-            return \Response::json($response, $statusCode);
+
+        return \Response::json($response, $statusCode);
+    }
+
+    public function bloggerStore(Request $request){
+        $user = new \App\User;
+
+        if(
+            \JWTAuth::getToken() && 
+            $this->getUserFromToken()->user_types_id == 1 &&
+            !empty($request->password) && 
+            !empty($request->name) && 
+            !empty($request->email))
+        {
+            $statusCode = 201;
+            $response = [
+                'respuesta'  =>  "Creado usuario con exito"
+            ];
+
+            $users = \App\User::all()
+                ->where('email',$request->email)
+                ->where('pages_id','1');
+
+            if(empty($users->first())){
+                $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
+                if($user->email != false)
+                {
+                  $user->name = $request->name;
+                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                  $user->password = \Hash::make($request->password);
+                  $user->dolares = 0;
+                  $user->user_types_id = 2;
+                  $user->pages_id = 1;
+                  $user->save();
+                }
+                else{
+                  $statusCode = 400;
+                $response = [
+                    'error'  =>  "Correo invalido"
+                ];
+                }
+            }
+            else{
+                $statusCode = 400;
+                $response = [
+                    'error'  =>  "Ese Correo ya existe con la misma pagina"
+                ];
+            }
+        }
+        else{
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Faltaron Datos o privilegios"
+            ];
         }
 
+        return \Response::json($response, $statusCode);
+    }
+
+    public function adminStore(Request $request){
+        $user = new \App\User;
+
+        if(
+            \JWTAuth::getToken() && 
+            $this->getUserFromToken()->user_types_id == 1 &&
+            !empty($request->password) && 
+            !empty($request->name) && 
+            !empty($request->email))
+        {
+            $statusCode = 201;
+            $response = [
+                'respuesta'  =>  "Creado usuario con exito"
+            ];
+
+            $users = \App\User::all()
+                ->where('email',$request->email)
+                ->where('pages_id','1');
+
+            if(empty($users->first())){
+                $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
+                if($user->email != false)
+                {
+                  $user->name = $request->name;
+                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                  $user->password = \Hash::make($request->password);
+                  $user->dolares = 0;
+                  $user->user_types_id = 1;
+                  $user->pages_id = 1;
+                  $user->save();
+                }
+                else{
+                  $statusCode = 400;
+                $response = [
+                    'error'  =>  "Correo invalido"
+                ];
+                }
+            }
+            else{
+                $statusCode = 400;
+                $response = [
+                    'error'  =>  "Ese Correo ya existe con la misma pagina"
+                ];
+            }
+        }
+        else{
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Faltaron Datos o privilegios"
+            ];
+        }
+
+        return \Response::json($response, $statusCode);
+    }
+
+    public function facebookStore(Request $request)
+    {
+        $user = new \App\User;
+
+        if(
+            !empty($request->name) && 
+            !empty($request->email))
+        {
+            $statusCode = 201;
+            $response = [
+                'respuesta'  =>  "Creado usuario con exito"
+            ];
+
+            $users = \App\User::all()
+                ->where('email',$request->email)
+                ->where('pages_id','2');
+
+            if(empty($users->first())){
+                $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
+                if($user->email != false)
+                {
+                  $user->name = $request->name;
+                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                  $user->dolares = 0;
+                  $user->user_types_id = 3;
+                  $user->pages_id = 2;
+                  $user->save();
+                }
+                else{
+                  $statusCode = 400;
+                $response = [
+                    'error'  =>  "Correo invalido"
+                ];
+                }
+            }
+            else{
+                $statusCode = 400;
+                $response = [
+                    'error'  =>  "Ese Correo ya existe con la misma pagina"
+                ];
+            }
+        }
+        else{
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Faltaron Datos"
+            ];
+        }
+
+        return \Response::json($response, $statusCode);
+    }
+
+
+    public function gmailStore(Request $request)
+    {
+        $user = new \App\User;
+
+        if(
+            !empty($request->name) && 
+            !empty($request->email))
+        {
+            $statusCode = 201;
+            $response = [
+                'respuesta'  =>  "Creado usuario con exito"
+            ];
+
+            $users = \App\User::all()
+                ->where('email',$request->email)
+                ->where('pages_id','3');
+
+            if(empty($users->first())){
+                $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
+                if($user->email != false)
+                {
+                  $user->name = $request->name;
+                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
+                  $user->dolares = 0;
+                  $user->user_types_id = 3;
+                  $user->pages_id = 3;
+                  $user->save();
+                }
+                else{
+                  $statusCode = 400;
+                $response = [
+                    'error'  =>  "Correo invalido"
+                ];
+                }
+            }
+            else{
+                $statusCode = 400;
+                $response = [
+                    'error'  =>  "Ese Correo ya existe con la misma pagina"
+                ];
+            }
+        }
+        else{
+            $statusCode = 400;
+            $response = [
+                'error'  =>  "Faltaron Datos"
+            ];
+        }
+
+        return \Response::json($response, $statusCode);
     }
 
 
@@ -107,8 +328,6 @@ class UserController extends Controller
                 $user->email = filter_var($request->email, FILTER_VALIDATE_EMAIL);
                 if($user->email != false)
                 {
-                  $user->user_types_id = $request->user_types_id;
-                  $user->pages_id = $request->pages_id;
                   $user->name = $request->name;
                   if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->password = \Hash::make($request->password);
@@ -149,7 +368,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        try {
+        if(\JWTAuth::getToken() && $this->getUserFromToken()->user_types_id == 1){
             $statusCode = 200;
             $response = [
                 'users'  => []
@@ -175,17 +394,15 @@ class UserController extends Controller
                     'referer_id' => $user->referer_id
                 ];
             }
+        }
+        else{
+            $response = [
+                "error" => "Sin Autorizacion"
+            ];
+            $statusCode = 403;
 
         }
-        catch(Exception $e) {
-            $statusCode = 400;
-            $response = [
-                'error'  => "Algo paso"
-            ];
-        }
-        finally {
-            return \Response::json($response, $statusCode);
-        }
+        return \Response::json($response, $statusCode);
     }
 
     /**
@@ -208,7 +425,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        try {
+        if(\JWTAuth::getToken() && $this->getUserFromToken()->user_types_id == 1){
             $statusCode = 200;
             $response = [
                 'users'  => "deleted"
@@ -226,16 +443,15 @@ class UserController extends Controller
             else{
                 \App\User::destroy($id);
             }
-
         }
-        catch(Exception $e) {
-            $statusCode = 400;
+        else{
             $response = [
-                'error'  => "no se pudo borrar"
+                "error" => "Sin Autorizacion"
             ];
+            $statusCode = 403;
         }
-        finally {
-            return \Response::json($response, $statusCode);
-        }
+
+        return \Response::json($response, $statusCode);
+        
     }
 }

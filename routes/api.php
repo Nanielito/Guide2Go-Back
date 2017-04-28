@@ -24,8 +24,10 @@ Route::post('/login','LoginController@validationGuide')
 /* Users */
 Route::group(['middleware' => 'cors'], function() {
 
-	//Route::get('photos/popular', 'PhotoController@method');
-
+	Route::post('user/admin', 'UserController@adminStore');
+	Route::post('user/blogger', 'UserController@bloggerStore');
+	Route::post('user/facebook', 'UserController@facebookStore');
+	Route::post('user/gmail', 'UserController@gmailStore');
 	Route::resource('user', 'UserController', [
 			'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
 			'parameters' => ['user' => 'id']
