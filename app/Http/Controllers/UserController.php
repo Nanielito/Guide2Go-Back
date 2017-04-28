@@ -14,6 +14,17 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function authenticateToken()
+    {
+        return \JWTAuth::parseToken()->authenticate() != false;
+    }
+
+    public function getUserFromToken()
+    {
+        return \JWTAuth::parseToken()->authenticate()
+    }
+
     public function index(Request $request)
     {
         try {

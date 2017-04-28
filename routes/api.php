@@ -23,12 +23,18 @@ Route::post('/login','LoginController@validationGuide')
 
 /* Users */
 Route::group(['middleware' => 'cors'], function() {
-Route::resource('user', 'UserController', [
-		'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
-		'parameters' => ['user' => 'id']
-	]
-);
+
+	//Route::get('photos/popular', 'PhotoController@method');
+
+	Route::resource('user', 'UserController', [
+			'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
+			'parameters' => ['user' => 'id']
+	]);
+
 });
+
+Route::get('pruebita', 'UserController@pruebita');
+
 /* Zonas */
 Route::resource('zona', 'ZoneController');
 
