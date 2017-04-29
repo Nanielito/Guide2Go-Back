@@ -39,7 +39,7 @@ class LoginController extends Controller
 
 	public function tokenCreation($id,$type,$name,$dolares)
 	{
-		$customClaims = ['sub' => $id, 'user_type' => $type, 'name' => $name, 'dolares' => $dolares];
+		$customClaims = ['sub' => $id, 'user_type' => $type, 'name' => $name];
 
 		$payload = \JWTFactory::make($customClaims);
 

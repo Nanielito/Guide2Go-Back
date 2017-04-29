@@ -368,7 +368,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        if(\JWTAuth::getToken() && $this->getUserFromToken()->user_types_id == 1){
+        if(\JWTAuth::getToken() && $this->authenticateToken()){
             $statusCode = 200;
             $response = [
                 'users'  => []
