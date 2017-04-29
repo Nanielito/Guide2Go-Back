@@ -44,7 +44,7 @@ class UserController extends Controller
                             'id' => $user->id,
                             'name' => $user->name,
                             'email' => $user->email,
-                            'monedas' => $user->monedas,
+                            'dolares' => $user->dolares,
                             'user_types_id' => $user->user_types_id,
                             'pages_id' => $user->pages_id,
                             'referer_id' => $user->referer_id
@@ -67,7 +67,7 @@ class UserController extends Controller
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
-                        'monedas' => $user->monedas,
+                        'dolares' => $user->dolares,
                         'user_types_id' => $user->user_types_id,
                         'pages_id' => $user->pages_id
                     ];
@@ -388,7 +388,7 @@ class UserController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'monedas' => $user->monedas,
+                    'dolares' => $user->dolares,
                     'user_types_id' => $user->user_types_id,
                     'pages_id' => $user->pages_id,
                     'referer_id' => $user->referer_id
