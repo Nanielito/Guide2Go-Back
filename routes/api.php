@@ -21,6 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('/login','LoginController@validationGuide')
 	->middleware('cors');
 
+Route::post('/login/google', 'LoginController@validateGoogle')
+	->middleware('cors');
+
 /* Users */
 Route::group(['middleware' => 'cors'], function() {
 

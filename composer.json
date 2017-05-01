@@ -8,6 +8,7 @@
         "php": ">=5.6.4",
         "barryvdh/laravel-cors": "^0.9.2",
         "elevenlab/laravel-geo": "^1.0",
+        "google/apiclient": "^2.1",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "tymon/jwt-auth": "0.5.*"
@@ -19,7 +20,8 @@
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+						"vendor/google/apiclient/src/Google"
         ],
         "psr-4": {
             "App\\": "app/"

@@ -30,5 +30,22 @@ class User extends Authenticatable
     public function page()
     {
         return $this->belongsTo('App\Page', 'pages_id');
-    }
+		}
+
+		public function googleStore($attr) {
+
+			$user = new \App\User;
+			$user->email = $attr['email'];
+			$user->name = $attr['name'];
+			$user->dolares = $attr['dolares'] ? : 0;
+
+			// Estos deberian ser por defecto
+			$user->user_types_id = $attr['user_types_id'] ? : 3;
+			$user->pages_id = $attr['pages_id'] ? : 3;
+
+			// Null ?
+			$user->referer_id = $attr['referer_id'] ? : null;
+			$user->save();
+
+		}
 }
