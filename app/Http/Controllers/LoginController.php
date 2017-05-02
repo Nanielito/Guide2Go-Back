@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class LoginController extends Controller
 {
@@ -95,7 +96,7 @@ class LoginController extends Controller
 			$statusCode = 400;
 			$response = [
 				'respuesta' => "El token no contiene email y nombre"
-			]
+			];
 			return \Response::json($response, $statusCode);
 		}
 
