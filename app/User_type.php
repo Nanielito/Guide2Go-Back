@@ -13,4 +13,9 @@ class User_type extends Model
         $user_type->save();
     }
 
+    public function user()
+    {
+        return $this->hasMany('App\User','user_types_id');
+    }
+
 }

@@ -27,6 +27,11 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function user_type()
+    {
+        return $this->belongsTo('App\User_type', 'user_types_id');
+    }
+
     public function page()
     {
         return $this->belongsTo('App\Page', 'pages_id');
