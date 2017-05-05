@@ -37,7 +37,7 @@ class UserController extends Controller
             if(empty($request->referer_id))
             {
                 if($this->getUserFromToken()->user_types_id == 1){
-                    $users = \App\User::all();
+                    $users = \App\User::with('page')->with('user_type')->get()
                     foreach($users as $user){
 
                         $response['users'][] = [
@@ -45,8 +45,8 @@ class UserController extends Controller
                             'name' => $user->name,
                             'email' => $user->email,
                             'dolares' => $user->dolares,
-                            'user_types_id' => $user->user_types_id,
-                            'pages_id' => $user->pages_id,
+                            'user_types_id' => $user->->user_type->type,
+                            'pages_id' => $user->page->name,
                             'referer_id' => $user->referer_id
                         ];
                     }

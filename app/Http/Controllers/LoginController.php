@@ -8,7 +8,7 @@ class LoginController extends Controller
 {
 	public function validationGuide(Request $request)
 	{
-		$user = \App\User::with('page')->with('user_type')
+		$user = \App\User::with('page')
 			->get()->where('email',$request->email)
 			->where('page.name','Guide2Go')->first();
 
