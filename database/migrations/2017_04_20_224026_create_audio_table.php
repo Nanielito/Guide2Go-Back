@@ -15,8 +15,8 @@ class CreateAudioTable extends Migration
     {
         Schema::create('audios', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
             $table->integer('parada_id')->unsigned();
+            $table->string('nombre');
             $table->timestamps();
 
             $table->foreign('parada_id')->references('id')->on('paradas');

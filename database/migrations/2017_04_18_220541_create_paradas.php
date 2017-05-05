@@ -25,7 +25,6 @@ class CreateParadas extends Migration
             $table->foreign('sub_zonas_id')->references('id')->on('sub_zonas');
 
             /* Clave foranea de categorias */
-            
             $table->timestamps();
         });
     }

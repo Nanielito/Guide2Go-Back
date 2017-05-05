@@ -20,7 +20,7 @@ class CreateCategoriaParadaTable extends Migration
         });
 
         Schema::table('paradas', function (Blueprint $table) {
-            $table->integer('categoria_id')->unsigned();
+            $table->integer('categoria_id')->unsigned()->after('sub_zonas_id');
             $table->foreign('categoria_id')->references('id')->on('categoria_paradas');
         });
     }
