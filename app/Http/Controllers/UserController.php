@@ -45,8 +45,8 @@ class UserController extends Controller
                             'name' => $user->name,
                             'email' => $user->email,
                             'dolares' => $user->dolares,
-                            'user_types_id' => $user->user_type->type,
-                            'pages_id' => $user->page->name,
+                            'user_type' => $user->user_type->type,
+                            'page' => $user->page->name,
                             'referer_id' => $user->referer_id
                         ];
                     }
