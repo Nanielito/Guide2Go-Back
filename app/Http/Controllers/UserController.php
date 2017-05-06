@@ -419,8 +419,7 @@ class UserController extends Controller
     {
         if(\JWTAuth::getToken() && 
             $this->getUserFromToken()->user_types_id == 1 &&
-            !empty($request->id) && 
-            ){
+            !empty($request->id)){
             $response = [
                 "respuesta" => "Actualizado con exito"
             ];
