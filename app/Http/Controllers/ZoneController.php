@@ -16,7 +16,11 @@ class ZoneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
+	{
+		if (!JWTHelper::authenticate()) {
+			$response = ['error' => "No autorizado" ];
+			return \Response::json($response, 403);
+		}
         return Zona::all();
     }
 
