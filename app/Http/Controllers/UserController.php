@@ -418,13 +418,12 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if(\JWTAuth::getToken() && 
-            $this->getUserFromToken()->user_types_id == 1 &&
-            !empty($request->id)){
+            $this->getUserFromToken()->user_types_id == 1){
             $response = [
                 "respuesta" => "Actualizado con exito"
             ];
             $statusCode = 200;
-            $user = App\User::find($request->id);
+            $user = App\User::find($id);
 
             if(!empty($request->name)){$user->name = $request->name;}
             if(!empty($request->email)){$user->email = $request->email;}
