@@ -19,5 +19,15 @@ class Zona extends GeoModel
 
     public function subZonas() {
     	return $this->hasMany('App\Sub_zona', 'zonas_id');
-    }
+	}
+
+	public static function store($name, $polygon) {
+
+		$zone = new Zona;
+		$zone->name = $name;
+		$zone->poligono = $polygon;
+		$zone->save();
+		
+		return $zone;
+	}
 }
