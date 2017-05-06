@@ -429,7 +429,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->dolares = $request->dolares;
             $user->user_types_id = $request->user_types_id;
-            $user->password = $request->password;
+            $user->password = \Hash::make($request->password);
             $user->save();
         }
         else{
