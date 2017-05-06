@@ -425,11 +425,11 @@ class UserController extends Controller
             $statusCode = 200;
             $user = \App\User::find($id);
 
-            if(!empty($request->name)){$user->name = $request->name;}
-            if(!empty($request->email)){$user->email = $request->email;}
-            if(!empty($request->dolares)){$user->dolares = $request->dolares;}
-            if(!empty($request->user_types_id)){$user->user_types_id = $request->user_types_id;}
-            if(!empty($request->password)){$user->password = $request->password;}
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->dolares = $request->dolares;
+            $user->user_types_id = $request->user_types_id;
+            $user->password = $request->password;
             $user->save();
         }
         else{
