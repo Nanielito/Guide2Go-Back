@@ -423,7 +423,7 @@ class UserController extends Controller
                 "respuesta" => "Actualizado con exito"
             ];
             $statusCode = 200;
-            $user = App\User::find($id);
+            $user = \App\User::find($id);
 
             if(!empty($request->name)){$user->name = $request->name;}
             if(!empty($request->email)){$user->email = $request->email;}
