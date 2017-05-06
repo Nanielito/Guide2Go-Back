@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use \App\Zone;
 use Illuminate\Http\Request;
+
+use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
+use \App\Zona;
 
 class ZoneController extends Controller
 {
@@ -14,7 +16,7 @@ class ZoneController extends Controller
      */
     public function index()
     {
-        return Zone::all();
+        return Zona::all();
     }
 
     /**
@@ -34,8 +36,26 @@ class ZoneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+	{	
+		// Pude haber usado el metodo input
+		// pero tendria que especificar que 
+		// el request es json siempre...
+		$json = $request->json()->all();
+		$poly = $json['polygon']; 
+		$name = $json['name'];
+
+		// Guarda la zona en la base de datos
+		// El poligono viene como [ [x, y], ..., [x, y] ]
+		$zone = Zona::store([
+			'name' => $name,
+			'polygon' => Polygon::fromArray([$poly])
+		]);
+
+		$response = $zone->jsonSerialize();
+		
+		// Podria hacer una funcion que autocompleta
+		// el poligono si no es circular, pero no...
+		return \Response::json($response, 200);
     }
 
     /**

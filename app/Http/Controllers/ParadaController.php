@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use ElevenLab\PHPOGC\DataTypes\Point as Point;
+use \App\Parada;
+
 class ParadaController extends Controller
 {
     /**
@@ -33,8 +36,25 @@ class ParadaController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+	{
+		$json = $request->json()->all();
+	
+		$subz  = $json['subzone'];
+		$catg  = $json['category'];
+		$name  = $json['name'];
+		$desc  = $json['description']; // Otro nombre?
+		$point = $json['point'];
+
+		$stop = Parada::store([
+			'subzone' => $subz,
+			'category' => $catg,
+			'name' => $name,
+			'description' => $desc,
+			'point' => Point::fromArray($point)
+		]);
+
+		$response = $stop->jsonSerialize();
+		return \Response::json($response, 200);
     }
 
     /**
