@@ -418,7 +418,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if(\JWTAuth::getToken() && 
-            $this->getUserFromToken()->user_types_id == 1){
+            $this->getUserFromToken()->user_types_id == 1 && !empty($request->user_types_id)){
             $response = [
                 "respuesta" => "Actualizado con exito"
             ];
