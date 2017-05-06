@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
+use \App\Sub_zona;
+
 class SubZoneController extends Controller
 {
     /**
@@ -33,8 +36,21 @@ class SubZoneController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+	{
+		$json = $request->json()->all();
+		$zone = $json['zone'];
+		$name = $json['name'];
+		$poly = $json['polygon'];
+
+		// Guarda la sub zona en la base de datos
+		$subz = Sub_zona::store([
+			'zone' => $zone,
+			'name' => $name,
+			'polygon' => Polygon::fromArray([$poly])
+		]);
+
+		$response = $subz->jsonSerialize();
+		return \Response::json($response, 200);
     }
 
     /**
