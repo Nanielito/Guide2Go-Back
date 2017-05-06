@@ -418,7 +418,7 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         if(\JWTAuth::getToken() && 
-            $this->getUserFromToken()->user_types_id == 1 && !empty($request->user_types_id)){
+            $this->getUserFromToken()->user_types_id == 1){
             $response = [
                 "respuesta" => "Actualizado con exito"
             ];
@@ -429,7 +429,7 @@ class UserController extends Controller
             $user->email = $request->email;
             $user->dolares = $request->dolares;
             $user->user_types_id = $request->user_types_id;
-            $user->password = \Hash::make($request->password);
+            if(!empty($request->password)){$user->password = \Hash::make($request->password);}
             $user->save();
         }
         else{
