@@ -147,7 +147,10 @@ class UserController extends Controller
             $this->getUserFromToken()->user_types_id == 1 &&
             !empty($request->password) && 
             !empty($request->name) && 
-            !empty($request->email))
+            !empty($request->email) &&
+            !empty($request->user_types_id) &&
+            !empty($request->dolares)
+            )
         {
             $statusCode = 201;
             $response = [
@@ -165,8 +168,8 @@ class UserController extends Controller
                   $user->name = $request->name;
                   if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->password = \Hash::make($request->password);
-                  $user->dolares = 0;
-                  $user->user_types_id = 1;
+                  $user->dolares = $request->dolares;
+                  $user->user_types_id = $request->user_types_id;
                   $user->pages_id = 1;
                   $user->save();
                 }
