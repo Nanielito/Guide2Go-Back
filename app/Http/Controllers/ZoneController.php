@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
+use \App\Helpers\JWTHelper;
 use \App\Zona;
 
 class ZoneController extends Controller
@@ -37,6 +38,12 @@ class ZoneController extends Controller
      */
     public function store(Request $request)
 	{	
+		// Verifica si es un admin
+		if (!JWTHelper::fromUserType(1)) {
+			$response = [ 'error' => "No autorizado" ];
+			return \Response::json($response, 403);
+		}
+
 		// Pude haber usado el metodo input
 		// pero tendria que especificar que 
 		// el request es json siempre...

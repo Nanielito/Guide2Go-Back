@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
+use \App\Helpers\JWTHelper;
 use \App\Sub_zona;
 
 class SubZoneController extends Controller
@@ -37,6 +38,12 @@ class SubZoneController extends Controller
      */
     public function store(Request $request)
 	{
+		// Verifica si es un admin
+		if (!JWTHelper::fromUserType(1)) {
+			$response = [ 'error' => "No autorizado" ];
+			return \Response::json($response, 403);
+		}
+
 		$json = $request->json()->all();
 		$zone = $json['zone'];
 		$name = $json['name'];
