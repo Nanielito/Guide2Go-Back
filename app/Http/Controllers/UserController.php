@@ -417,7 +417,30 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if(\JWTAuth::getToken() && 
+            $this->getUserFromToken()->user_types_id == 1 &&
+            !empty($request->id) && 
+            ){
+            $response = [
+                "respuesta" => "Actualizado con exito"
+            ];
+            $statusCode = 200;
+            $user = App\User::find($request->id);
+
+            if(!empty($request->name)){$user->name = $request->name;}
+            if(!empty($request->email)){$user->email = $request->email;}
+            if(!empty($request->dolares)){$user->dolares = $request->dolares;}
+            if(!empty($request->user_types_id)){$user->user_types_id = $request->user_types_id;}
+            if(!empty($request->password)){$user->password = $request->password;}
+            $user->save();
+        }
+        else{
+            $response = [
+                "error" => "Sin Autorizacion"
+            ];
+            $statusCode = 403;
+        }
+        return \Response::json($response, $statusCode);
     }
 
     /**
