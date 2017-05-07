@@ -16,7 +16,6 @@ class CreateFotoParadaTable extends Migration
         Schema::create('fotos', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parada_id')->unsigned();
-			$table->string('nombre');
 			$table->string('path');
             $table->timestamps();
 

@@ -22,7 +22,6 @@ class Audio extends Model
 		$aud = new Audio;
 		$aud->parada_id  = $args['spot'];
 		$aud->idiomas_id = $args['lang'];
-		$aud->nombre     = $args['name'];
 		$aud->path       = $args['path'];
 		$aud->save();
 

@@ -42,7 +42,6 @@ class AudioController extends Controller
 		$params = [
 			'spot' => $request->spot,
 			'lang' => $request->lang,
-			'name' => $request->name,
 		];
 
 		// Sube el audio
