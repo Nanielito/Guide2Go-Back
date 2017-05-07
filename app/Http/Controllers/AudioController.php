@@ -46,7 +46,12 @@ class AudioController extends Controller
 
 		// Sube el audio
 		$file = $request->file('aud');
-		return $file;
+		if (!$file->isValid()) {
+			$response = [ 'error' => "Archivo no valido" ];
+			return \Response::json($response, 400);
+			// Bad request?
+		}
+
 		// Guarda el audio en el sistema de archivos
 		$params['path'] = $file->store('audios');
 
