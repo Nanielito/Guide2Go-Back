@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \App\Audio;
+
 class AudioController extends Controller
 {
     /**
@@ -33,17 +35,26 @@ class AudioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-		$spot = $request->spot;
-		$lang = $request->lang;
-		$name = $request->name;
+	{
+		// Validar el token
+		// Validar si la parada existe
+		// etc
+		$params = [
+			'spot' => $request->spot,
+			'lang' => $request->lang,
+			'name' => $request->name,
+		];
 
-		// Sube el audio 
+		// Sube el audio
+		$file = $request->file('aud');
+
 		// Guarda el audio en el sistema de archivos
+		$params['path'] = $file->store('audios');
+
 		// Termina de crear el audio en la base de datos
-
+		$aud = Audio::store($params);
 		
-
+		$response = $aud->jsonSerialize();
 		return \Response::json($response, 200);
     }
 

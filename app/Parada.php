@@ -13,6 +13,10 @@ class Parada extends GeoModel
     public function subZona() {
     	return $this->belongsTo('App\Sub_zona', 'sub_zonas_id');
 	}
+
+	public function audios() {
+	   return $this->hasMany('App\Audio', 'parada_id');	
+	}
 	
 	/**
 	 * Crear una parada en la base de datos

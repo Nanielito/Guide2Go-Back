@@ -17,7 +17,7 @@ class ParadaController extends Controller
      */
     public function index()
     {
-        //
+        return Parada::all();
     }
 
     /**
