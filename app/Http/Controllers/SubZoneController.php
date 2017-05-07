@@ -17,7 +17,7 @@ class SubZoneController extends Controller
      */
     public function index()
     {
-        //
+        return Sub_zona::all();
     }
 
     /**
