@@ -16,6 +16,10 @@ class Sub_zona extends GeoModel
     	return $this->hasMany('App\Parada', 'sub_zonas_id');
 	}
 
+	public function zona() {
+		return $this->belongsTo('App\Zona', 'zonas_id');
+	}
+
 	/**
 	 * Guarda en la base de datos una sub zona
 	 *
