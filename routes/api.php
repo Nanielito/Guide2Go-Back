@@ -48,3 +48,6 @@ Route::resource('parada', 'ParadaController');
 
 /* Sub Zonas */
 Route::resource('sub_zone', 'SubZoneController');
+
+/* Audio */
+Route::resource('audio', 'AudioController');
