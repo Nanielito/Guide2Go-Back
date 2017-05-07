@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \App\Guia;
+
 class GuideController extends Controller
 {
     /**
@@ -34,7 +36,17 @@ class GuideController extends Controller
      */
     public function store(Request $request)
     {
-        //
+		$params = [
+			'zone' => $request->zone,
+			'lang' => $request->lang,
+			'cost' => $request->cost,
+		];
+
+		// Crea una guia en la base de datos
+		$guide = Guia::store($params);
+
+		$response = $guide->jsonSerialize();
+		return \Response::json($response, 200);
     }
 
     /**
