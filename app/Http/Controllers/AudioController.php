@@ -46,6 +46,11 @@ class AudioController extends Controller
 
 		// Sube el audio
 		$file = $request->file('aud');
+		if (!$file->isValid()) {
+			$response = [ 'error' => "Archivo no valido" ];
+			return \Response::json($response, 400);
+			// Bad request?
+		}
 
 		// Guarda el audio en el sistema de archivos
 		$params['path'] = $file->store('audios');
@@ -64,9 +69,23 @@ class AudioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
-    }
+	{
+		// Verifica el token y si el usuario
+		// puede descargar ese audio
+	
+		// Busca el audio en la base de datos
+		$file = Audio::find($id);
+		if (!$file) {
+			$response = [ 'error' => "No se encontro el audio" ];
+			return \Response::json($response, 400);
+			// Bad request?
+		}
+
+		$path = storage_path('app/') . $file->path;
+		
+		// descarga el audio...
+		return \Response::download($path);
+	}
 
     /**
      * Show the form for editing the specified resource.

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \App\Helpers\JWTHelper;
 use \App\Guia;
+use \APp\User;
 
 class GuideController extends Controller
 {
@@ -13,9 +15,39 @@ class GuideController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
+    public function index(Request $request)
+	{
+		// Retorna un usuario del token
+		// si existe
+		$fromUser = JWTHelper::authenticate();
+		if (!$fromUser) {
+			$response = [ 'error' => "No se encontro token" ];
+			return \Response::json($response, 403);
+		}
+
+		// Obtiene un usuario del request
+		$userId = $request->user;
+		
+		if (empty($userId)) {
+			return Guia::all();
+		}
+		
+		// Verifica que el usuario que hace el 
+		// request puede ver las guias 
+		if ($fromUser->id != $userId && 
+			$fromUser->id != 1 ) { // Admin 
+			 
+			$response = [ 'error' => "No autorizado" ];
+			return \Response::json($response, 403);
+		}
+
+		// Trae el usuario de la base de datos
+		$user = User::find($userId);
+
+		// Obtiene las guias del usuario
+		$userGuides = $user->guias;
+
+		return $userGuides;
     }
 
     /**

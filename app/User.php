@@ -35,5 +35,10 @@ class User extends Authenticatable
     public function page()
     {
         return $this->belongsTo('App\Page', 'pages_id');
-    }
+	}
+
+	public function guias() {
+		return $this->belongsToMany('App\Guia', 'user_guide', 'user_id', 'guide_id');
+	}
 }
+
