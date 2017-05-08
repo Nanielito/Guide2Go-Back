@@ -27,7 +27,7 @@ class GuideController extends Controller
 
 		// Obtiene un usuario del request
 		$userId = $request->user;
-		
+
 		if (empty($userId)) {
 			return Guia::all();
 		}
@@ -41,11 +41,10 @@ class GuideController extends Controller
 			return \Response::json($response, 403);
 		}
 
-		// Trae el usuario de la base de datos
-		$user = User::find($userId);
-
-		// Obtiene las guias del usuario
-		$userGuides = $user->guias;
+		// Trae las guias del usuario
+		$userGuides = User::where('id', $userId)
+			->getRelation('guias')->with('zona')
+			->get();
 
 		return $userGuides;
     }
