@@ -35,7 +35,7 @@ Route::group(['middleware' => 'cors'], function() {
 
 });
 
-Route::get('pruebita', 'UserController@pruebita');
+Route::get('sub_zone/zone/{id}', 'SubZoneController@subZoneZone');
 
 /* Zonas */
 Route::resource('zona', 'ZoneController');

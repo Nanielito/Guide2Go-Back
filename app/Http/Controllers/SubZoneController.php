@@ -10,6 +10,13 @@ use \App\Sub_zona;
 
 class SubZoneController extends Controller
 {
+
+
+    public function subZoneZone($id)
+    {
+        return Sub_zona::all()->where('zonas_id',$id);
+    }
+
     /**
      * Display a listing of the resource.
      *
