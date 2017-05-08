@@ -29,3 +29,4 @@ class Guia extends Model
 		return $guide;
 	}
 }
+
