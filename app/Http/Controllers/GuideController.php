@@ -35,7 +35,7 @@ class GuideController extends Controller
 		// Verifica que el usuario que hace el 
 		// request puede ver las guias 
 		if ($fromUser->id != $userId && 
-			$fromUser->id != 1 ) { // Admin 
+			$fromUser->user_types_id != 1 ) { // Admin 
 			 
 			$response = [ 'error' => "No autorizado" ];
 			return \Response::json($response, 403);
