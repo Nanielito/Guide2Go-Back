@@ -144,12 +144,7 @@ class UserController extends Controller
 
         if(
             \JWTAuth::getToken() && 
-            $this->getUserFromToken()->user_types_id == 1 &&
-            !empty($request->password) && 
-            !empty($request->name) && 
-            !empty($request->email) &&
-            !empty($request->user_types_id) &&
-            !empty($request->dolares)
+            $this->getUserFromToken()->user_types_id == 1
             )
         {
             $statusCode = 201;
