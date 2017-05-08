@@ -35,7 +35,11 @@ Route::group(['middleware' => 'cors'], function() {
 
 });
 
+/*Se obtienen todas las subzonas correspondientes a una zona*/
 Route::get('sub_zone/zone/{id}', 'SubZoneController@subZoneZone');
+
+/*se obtienen todas las paradas correspondientes a una subzona*/
+Route::get('parada/sub_zone/{id}', 'ParadaController@paradaSubZone');
 
 /* Zonas */
 Route::resource('zona', 'ZoneController');

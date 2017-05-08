@@ -10,6 +10,12 @@ use \App\Parada;
 
 class ParadaController extends Controller
 {
+
+    public function paradaSubZone($id)
+    {
+        return Parada::all()->where('sub_zonas_id',$id);
+    }
+
     /**
      * Display a listing of the resource.
      *
