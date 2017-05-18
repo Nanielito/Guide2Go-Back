@@ -27,11 +27,16 @@ class GuideController extends Controller
 
 		// Obtiene un usuario del request
 		$userId = $request->user;
+		$self   = $request->self;
+
+		if ($self) {
+			$userId = $fromUser->id;
+		}
 
 		if (empty($userId)) {
 			return Guia::all();
 		}
-		
+	
 		// Verifica que el usuario que hace el 
 		// request puede ver las guias 
 		if ($fromUser->id != $userId && 
