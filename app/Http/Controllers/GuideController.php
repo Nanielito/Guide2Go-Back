@@ -21,7 +21,7 @@ class GuideController extends Controller
 		// si existe
 		$fromUser = JWTHelper::authenticate();
 		if (!$fromUser) {
-			$response = [ 'error' => "No se encontro token" ];
+			$response = [ 'error' => "No se encontro un token" ];
 			return \Response::json($response, 403);
 		}
 

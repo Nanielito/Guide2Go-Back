@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \App\Helpers\JWTHelper;
+
 class UserController extends Controller
 {
 
@@ -26,8 +28,26 @@ class UserController extends Controller
     }
 
     public function index(Request $request)
-    {
-        if(\JWTAuth::getToken() && $this->getUserFromToken()->user_types_id != 3){
+	{
+		$fromUser = JWTHelper::authenticate();
+
+		if (!$fromUser) {
+			$response = [ 'error' => "No se encontro un token" ];
+			return \Response::json($response, 403);
+		}
+
+		if ($request->self) {
+			$response = [ 'users' => [ $fromUser ] ];
+			return \Response::json($response, 200);
+		}
+
+		/**
+		 * Comienzo de codigo de Andres
+		 * Territorio desconocido
+		 */
+
+		if (\JWTAuth::getToken() && 
+			$this->getUserFromToken()->user_types_id != 3) {
     
             $statusCode = 200;
             $response = [
