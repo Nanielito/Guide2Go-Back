@@ -32,7 +32,10 @@ class GuideController extends Controller
 		if ($self) {
 			$userId = $fromUser->id;
 		}
-
+		
+		// Por ahora vamos a dejar que cualquier usuario
+		// pueda ver todas las guias
+		// Hay que limitar la informacion aqui
 		if (empty($userId)) {
 			return Guia::all();
 		}
@@ -47,8 +50,9 @@ class GuideController extends Controller
 		}
 
 		// Trae las guias del usuario
-		$userGuides = User::where('id', $userId)
+		$userGuides = User::query()
 			->getRelation('guias')->with('zona')
+			->wherePivot('user_id', '=', $userId)
 			->get();
 
 		return $userGuides;
