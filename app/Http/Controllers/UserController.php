@@ -20,6 +20,24 @@ class UserController extends Controller
         return \JWTAuth::parseToken()->authenticate() != false;
     }
 
+    public function tokenexp(){
+        $statusCode = 200;
+
+        $token = \JWTAuth::getToken();
+        if(!$token){
+            $statusCode = 404;
+            $response = [
+                'error' => 'Theres no token'
+            ];
+            return \Response::json($response, $statusCode);
+        }
+        $token = \JWTAuth::refresh($token);
+        $response = [
+                'token' => $token
+            ];
+        return \Response::json($response, $statusCode);
+    }
+
     public function getUserFromToken()
     {
         return \JWTAuth::parseToken()->authenticate();

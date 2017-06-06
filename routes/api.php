@@ -35,6 +35,8 @@ Route::group(['middleware' => 'cors'], function() {
 
 });
 
+Route::get('tokenexp', 'UserController@tokenexp');
+
 /*Se obtienen todas las subzonas correspondientes a una zona*/
 Route::get('sub_zone/zone/{id}', 'SubZoneController@subZoneZone');
 
