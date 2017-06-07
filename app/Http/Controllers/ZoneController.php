@@ -17,9 +17,7 @@ class ZoneController extends Controller
      */
     public function index()
 	{
-        //helper no funciona ver despues por que
-		//if (JWTHelper::authenticate() == null) {
-        if(!\JWTAuth::getToken()){
+		if (JWTHelper::authenticate() == null) {
 			$response = ['error' => 'Unauthorized' ];
             return \Response::json($response, 403);   
 		}
