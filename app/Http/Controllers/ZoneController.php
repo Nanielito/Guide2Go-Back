@@ -17,8 +17,8 @@ class ZoneController extends Controller
      */
     public function index()
 	{
-		//if (!JWTHelper::authenticate()) {
-        if(\JWTAuth::parseToken()->authenticate() == false && !\JWTAuth::getToken()){}
+		if (!JWTHelper::authenticate()) {
+        //if(\JWTAuth::parseToken()->authenticate() == false && !\JWTAuth::getToken()){}
 			$response = ['error' => "No autorizado" ];
 			return \Response::json($response, 403);
 		}
