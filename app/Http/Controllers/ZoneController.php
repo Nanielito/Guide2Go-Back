@@ -18,7 +18,7 @@ class ZoneController extends Controller
     public function index()
 	{
 		if (!JWTHelper::authenticate()) {
-			$response = ['error' => "No autorizado" ];
+			$response = ['error' => JWTHelper::authenticate() ];
 			return \Response::json($response, 403);
 		}
         return Zona::all();
