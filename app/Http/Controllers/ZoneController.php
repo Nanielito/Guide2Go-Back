@@ -19,7 +19,7 @@ class ZoneController extends Controller
 	{
 		if (JWTHelper::authenticate() == null) {
         //if(!\JWTAuth::getToken() && \JWTAuth::parseToken()->authenticate() == false){
-			$response = ['error' => 'Unauthorized' ];
+			$response = ['error' => JWTHelper::authenticate() ];
             return \Response::json($response, 403);   
 		}
         return Zona::all(); 
