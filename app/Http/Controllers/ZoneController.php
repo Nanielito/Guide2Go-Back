@@ -18,7 +18,7 @@ class ZoneController extends Controller
     public function index()
 	{
 		//if (!JWTHelper::authenticate()) {
-        if(\JWTAuth::getToken() && \JWTAuth::parseToken()->authenticate() != false;){
+        if(\JWTAuth::getToken() && \JWTAuth::parseToken()->authenticate() != false){
 			
             return Zona::all();
 		}
