@@ -18,13 +18,11 @@ class ZoneController extends Controller
     public function index()
 	{
 		//if (!JWTHelper::authenticate()) {
-        if(\JWTAuth::getToken()){
-			
-            return Zona::all();
+        if(!\JWTAuth::getToken() && \JWTAuth::parseToken()->authenticate() == false){
+			$response = ['error' => "No autorizado" ];
+            return \Response::json($response, 403);   
 		}
-        $response = ['error' => "No autorizado" ];
-        return \Response::json($response, 403);
-       
+        return Zona::all(); 
     }
 
     /**
