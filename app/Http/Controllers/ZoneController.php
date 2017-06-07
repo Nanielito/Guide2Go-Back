@@ -19,10 +19,12 @@ class ZoneController extends Controller
 	{
 		//if (!JWTHelper::authenticate()) {
         if(\JWTAuth::getToken()){}
-			$response = ['error' => "No autorizado" ];
-			return \Response::json($response, 403);
+			
+            return Zona::all();
 		}
-        return Zona::all();
+        $response = ['error' => "No autorizado" ];
+        return \Response::json($response, 403);
+       
     }
 
     /**
