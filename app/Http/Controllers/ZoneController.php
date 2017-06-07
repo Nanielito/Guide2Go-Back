@@ -19,7 +19,7 @@ class ZoneController extends Controller
 	{
         //helper no funciona ver despues por que
 		//if (JWTHelper::authenticate() == null) {
-        if(!\JWTAuth::getToken() && \JWTAuth::parseToken()->authenticate() == false){
+        if(!\JWTAuth::getToken()){
 			$response = ['error' => 'Unauthorized' ];
             return \Response::json($response, 403);   
 		}
