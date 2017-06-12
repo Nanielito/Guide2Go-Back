@@ -17,10 +17,10 @@ class ZoneController extends Controller
      */
     public function index()
 	{
-		if (!JWTHelper::authenticate()) {
+		/*if (!JWTHelper::authenticate()) {
 			$response = ['error' => 'error' ];
 			return \Response::json($response, 403);
-		}
+		}*/
        return Zona::all();
     }
 

@@ -26,7 +26,7 @@ class GuideController extends Controller
 		}
 
 		// Obtiene un usuario del request
-		$userId = $request->user;
+		$userId = $request->self;
 
 		if (empty($userId)) {
 			return Guia::all();
@@ -34,17 +34,16 @@ class GuideController extends Controller
 		
 		// Verifica que el usuario que hace el 
 		// request puede ver las guias 
-		if ($fromUser->id != $userId && 
+		/*if ($fromUser->id != $userId && 
 			$fromUser->user_types_id != 1 ) { // Admin 
 			 
 			$response = [ 'error' => "No autorizado" ];
 			return \Response::json($response, 403);
-		}
+		}*/
 
 		// Trae las guias del usuario
-		$userGuides = User::where('id', $userId)
-			->getRelation('guias')->with('zona')
-			->get();
+
+		$userGuides = User::where('id',$fromUser->id)->getRelation('guias')->where('user_id',$fromUser->id)->with('zona')->get();
 
 		return $userGuides;
     }
