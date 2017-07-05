@@ -40,6 +40,10 @@ Route::get('tokenexp', 'UserController@tokenexp');
 /*Se obtienen todas las subzonas correspondientes a una zona*/
 Route::get('sub_zone/zone/{id}', 'SubZoneController@subZoneZone');
 
+Route::get('audio/parada/{id}', 'AudioController@paradaShow');
+
+Route::get('photo/parada/{id}', 'PhotoController@paradaShow');
+
 /*se obtienen todas las paradas correspondientes a una subzona*/
 Route::get('parada/sub_zone/{id}', 'ParadaController@paradaSubZone');
 
@@ -57,3 +61,6 @@ Route::resource('sub_zone', 'SubZoneController');
 
 /* Audio */
 Route::resource('audio', 'AudioController');
+
+/*Photo*/
+Route::resource('photo', 'PhotoController');

@@ -100,7 +100,18 @@ class ZoneController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+	$statusCode = 200;
+        $zona = Zona::find($id);
+
+	/*$json = $request->json()->all();
+        $poly = $json['polygon'];
+        $name = $json['name'];*/
+
+	if(!empty($request->name)) $zona->name = $request->name;
+	if(!empty($request->polygon)) $zona->poligono = Polygon::fromArray([$request->polygon]);
+	$zona->save();
+
+	return \Response::json($zona, $statusCode); 
     }
 
     /**

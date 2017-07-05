@@ -98,7 +98,16 @@ class SubZoneController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $statusCode = 200;
+        $subZona = Sub_zona::find($id);
+
+        if(!empty($request->name)) $subZona->nombre = $request->name;
+        if(!empty($request->polygon)) $subZona->poligono = Polygon::fromArray([$request->polygon]);
+	if(!empty($request->zone)) $subZona->zonas_id = $request->zone;
+        $subZona->save();
+
+        return \Response::json($subZona, $statusCode);
+ 
     }
 
     /**
@@ -107,8 +116,7 @@ class SubZoneController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id){
+            //
     }
 }

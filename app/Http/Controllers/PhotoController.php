@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use \App\Audio;
+use \App\Photo;
 
-class AudioController extends Controller
+class PhotoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -35,32 +35,31 @@ class AudioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-	{
-		// Validar el token
-		// Validar si la parada existe
-		// etc
-		$params = [
-			'spot' => $request->spot,
-			'lang' => $request->lang,
-		];
+    {
+        // Validar el token
+                // Validar si la parada existe
+                // etc
+                $params = [
+                        'spot' => $request->spot
+                ];
 
-		// Sube el audio
-		$file = $request->aud;
-		
-		if (!$file->isValid()) {
-			$response = [ 'error' => "Archivo no valido" ];
-			return \Response::json($response, 400);
-			// Bad request?
-		}
+                // Sube el photo
+                $file = $request->photo;
 
-		// Guarda el audio en el sistema de archivos
-		$params['path'] = $file->store('audios');
+                if (!$file->isValid()) {
+                        $response = [ 'error' => "Archivo no valido" ];
+                        return \Response::json($response, 400);
+                        // Bad request?
+                }
 
-		// Termina de crear el audio en la base de datos
-		$aud = Audio::store($params);
-		
-		$response = $aud->jsonSerialize();
-		return \Response::json($response, 200);
+                // Guarda la photo en el sistema de archivos
+                $params['path'] = $file->store('photos');
+
+                // Termina de crear el audio en la base de datos
+                $photo = Photo::store($params);
+
+                $response = $photo->jsonSerialize();
+                return \Response::json($response, 200);
     }
 
     /**
@@ -70,44 +69,30 @@ class AudioController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-	{
-		// Verifica el token y si el usuario
-		// puede descargar ese audio
-	
-		// Busca el audio en la base de datos, esto hay q cambiarlo
-		$file = Audio::find($id);
-		
-		if (!$file) {
-			$response = [ 'error' => "No se encontro el audio" ];
-			return \Response::json($response, 400);
-			// Bad request?
-		}
+    {
+        //
+    }
 
-		$path = $file->path;
-		
-		// descarga el audio...
-		return \Response::json($path,200);
-	}
-
-
-	public function paradaShow($id)
-        {
+    public function paradaShow($id)
+    {
                 // Verifica el token y si el usuario
                 // puede descargar ese audio
 
-                // Busca el audio en la base de datos, esto hay q cambiarlo
-                $file = Audio::all()->where('parada_id',$id)->first();
+                // Busca el photo en la base de datos, esto hay q cambiarlo
+                $file = Photo::all()->where('parada_id',$id)->first();
 
                 if (!$file) {
-                        $response = [ 'error' => "No se encontro el audio" ];
+                        $response = [ 'error' => "no Se encontro Foto" ];
                         return \Response::json($response, 400);
                         // Bad request?
                 }
 
-                // descarga el audio...
-                return \Response::json($file,200);
-        }
-	
+                $path = $file->path;
+
+                // descarga el photo...
+                return \Response::json($path,200);
+     }
+
 
     /**
      * Show the form for editing the specified resource.

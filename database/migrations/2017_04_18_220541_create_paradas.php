@@ -21,6 +21,8 @@ class CreateParadas extends Migration
             $table->string('nombre');
             $table->longText('descripcion');
             $table->point('punto');
+		
+	    $table->integer('metros')->unsigned()->nullable();
 
             $table->foreign('sub_zonas_id')->references('id')->on('sub_zonas');
 

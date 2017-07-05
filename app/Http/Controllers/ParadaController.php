@@ -57,13 +57,15 @@ class ParadaController extends Controller
 		$name  = $json['name'];
 		$desc  = $json['description']; // Otro nombre?
 		$point = $json['point'];
+		$meters = $json['meters'];
 
 		$stop = Parada::store([
 			'subzone' => $subz,
 			'category' => $catg,
 			'name' => $name,
 			'description' => $desc,
-			'point' => Point::fromArray($point)
+			'point' => Point::fromArray($point),
+			'meters' => $meters
 		]);
 
 		$response = $stop->jsonSerialize();
@@ -101,7 +103,18 @@ class ParadaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $statusCode = 200;
+        $parada = Parada::find($id);
+
+        if(!empty($request->name)) $parada->nombre = $request->name;
+        if(!empty($request->description)) $parada->descripcion = $request->description;
+        if(!empty($request->point)) $parada->punto = Point::fromArray($request->point);
+	if(!empty($request->subzone)) $parada->sub_zonas_id = $request->subzone;
+	if(!empty($request->category)) $parada->categoria_id = $request->category;
+	if(!empty($request->meters)) $parada->meters = $request->meters;
+        $parada->save();
+
+        return \Response::json($parada, $statusCode);
     }
 
     /**

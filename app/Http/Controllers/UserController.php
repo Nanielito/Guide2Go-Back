@@ -31,9 +31,17 @@ class UserController extends Controller
             ];
             return \Response::json($response, $statusCode);
         }
-        $token = \JWTAuth::refresh($token);
+
+	$claims  = \JWTAuth::getJWTProvider()->decode($token);
+
+	$customClaims = ['sub' => $claims['sub'], 'user_type' => $claims['user_type'], 'name' => $claims['name']];
+
+       	$payload = \JWTFactory::make($customClaims);
+
+       	$token = \JWTAuth::encode($payload)->get();
+
         $response = [
-                'token' => $token
+                'token' =>  $token
             ];
         return \Response::json($response, $statusCode);
     }

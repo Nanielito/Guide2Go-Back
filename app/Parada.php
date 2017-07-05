@@ -32,6 +32,7 @@ class Parada extends GeoModel
 		$stop->nombre = $args['name'];
 		$stop->descripcion = $args['description'];
 		$stop->punto = $args['point'];
+		$stop->metros = $args['meters'];
 		$stop->save();
 
 		return $stop;
