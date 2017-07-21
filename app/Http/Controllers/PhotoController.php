@@ -79,7 +79,7 @@ class PhotoController extends Controller
                 // puede descargar ese audio
 
                 // Busca el photo en la base de datos, esto hay q cambiarlo
-                $file = Photo::all()->where('parada_id',$id)->first();
+                $file = Photo::all()->where('parada_id',$id);
 
                 if (!$file) {
                         $response = [ 'error' => "no Se encontro Foto" ];
@@ -87,7 +87,7 @@ class PhotoController extends Controller
                         // Bad request?
                 }
 
-                $path = $file->path;
+                $path = $file;
 
                 // descarga el photo...
                 return \Response::json($path,200);

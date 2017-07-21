@@ -24,6 +24,8 @@ Route::post('/login','LoginController@validationGuide')
 /* Users */
 Route::group(['middleware' => 'cors'], function() {
 
+	Route::post('user/guia/admin', 'UserController@guiaLinkAdmin');	
+	Route::post('user/guia', 'UserController@guiaLink');
 	Route::post('user/admin', 'UserController@adminStore');
 	Route::post('user/blogger', 'UserController@bloggerStore');
 	Route::post('user/facebook', 'UserController@facebookStore');
@@ -64,3 +66,6 @@ Route::resource('audio', 'AudioController');
 
 /*Photo*/
 Route::resource('photo', 'PhotoController');
+
+/*Idioma*/
+Route::resource('idioma', 'IdiomaController');

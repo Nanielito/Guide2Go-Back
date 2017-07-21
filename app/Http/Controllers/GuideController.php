@@ -29,7 +29,24 @@ class GuideController extends Controller
 		$userId = $request->self;
 
 		if (empty($userId)) {
-			return Guia::all();
+			$response = [
+                		'guides'  => []
+            		]; 
+			$guias = Guia::all();
+			foreach($guias as $guide){
+				$zonaNombre= \App\Zona::find($guide->zonas_id)->name;				
+				$idioma = \App\Idioma::find($guide->idiomas_id)->name;
+                        	$response['guides'][] = [
+                            	'id' => $guide->id,
+                            	'name' => $zonaNombre,
+                            	'costo' => $guide->costo,
+                            	'idioma' => $idioma,
+                            	'zonas_id' => $guide->zonas_id,
+                            	'idiomas_id' => $guide->idiomas_id
+                        	];
+                    	}
+
+			return $response;
 		}
 		
 		// Verifica que el usuario que hace el 
@@ -110,7 +127,26 @@ class GuideController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+       
+	if(\JWTAuth::getToken()){
+            $response = [
+                "respuesta" => "Actualizado con exito"
+            ];
+            $statusCode = 200;
+            $guide = \App\Guia::find($id);
+
+            $guide->zonas_id = $request->zone;
+            $guide->idiomas_id = $request->lang;
+            $guide->costo = $request->cost;
+            $guide->save();
+        }
+        else{
+            $response = [
+                "error" => "Sin Autorizacion"
+            ];
+            $statusCode = 403;
+        }
+        return \Response::json($response, $statusCode);
     }
 
     /**

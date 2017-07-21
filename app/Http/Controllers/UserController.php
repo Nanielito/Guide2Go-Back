@@ -3,9 +3,48 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Hashids\Hashids;
+use \App\User;
 
 class UserController extends Controller
 {
+
+    public function guiaLink(Request $request){
+	$response = "No autorizado";
+        $statusCode = 401;
+
+	if(\JWTAuth::getToken()){
+		$response = "Monto Insuficiente, recarge";
+		$statusCode = 402;
+		$user = $this->getUserFromToken();
+		$guia = \App\Guia::find($request->id);
+		if($guia && $guia->costo <= $user->dolares){
+			$response = "Correcto y comprado";
+			$statusCode = 200;
+			$user->dolares = $user->dolares - $guia->costo;
+			$user->save();
+			$user->guias()->attach($request->id); 
+		}	
+	}
+	return \Response::json($response, $statusCode);
+    }
+
+     public function guiaLinkAdmin(Request $request){
+        $response = "No autorizado";
+        $statusCode = 401;
+
+        if(\JWTAuth::getToken()){
+                $user = $this->getUserFromToken();
+                $guia = \App\Guia::find($request->guia_id);
+                if($guia && $user->user_types_id == 1){
+			$user = \App\User::find($request->user_id);
+                        $response = "Correcto y comprado";
+                        $statusCode = 200;
+                        $user->guias()->attach($request->guia_id);
+                }
+        }
+        return \Response::json($response, $statusCode);
+    }
 
     // Añadir token para impedir bielorusos
 
@@ -31,18 +70,25 @@ class UserController extends Controller
             ];
             return \Response::json($response, $statusCode);
         }
-
+	
 	$claims  = \JWTAuth::getJWTProvider()->decode($token);
+	
+	$user = User::find($claims['sub']);
+	if($user && $user->name == $claims['name']){
+		$customClaims = ['sub' => $claims['sub'], 'user_type' => $claims['user_type'], 'name' => $claims['name']];
 
-	$customClaims = ['sub' => $claims['sub'], 'user_type' => $claims['user_type'], 'name' => $claims['name']];
+       		$payload = \JWTFactory::make($customClaims);
 
-       	$payload = \JWTFactory::make($customClaims);
+       		$token = \JWTAuth::encode($payload)->get();
 
-       	$token = \JWTAuth::encode($payload)->get();
-
-        $response = [
-                'token' =>  $token
-            ];
+        	$response = [
+                	'token' =>  $token
+            	];
+	}
+	else{
+		$response = "no se Pudo renovar";
+		$statusCode = 403;
+	}
         return \Response::json($response, $statusCode);
     }
 
@@ -60,10 +106,14 @@ class UserController extends Controller
                 'users'  => []
             ];
 
+ 	    $key = env("APP_KEY");
+            $hashids = new Hashids($key, 10);
+
             if(empty($request->referer_id))
             {
-                if($this->getUserFromToken()->user_types_id == 1){
+	            if($this->getUserFromToken()->user_types_id == 1){
                     $users = \App\User::with('page')->with('user_type')->get();
+				
                     foreach($users as $user){
 
                         $response['users'][] = [
@@ -73,7 +123,8 @@ class UserController extends Controller
                             'dolares' => $user->dolares,
                             'user_type' => $user->user_type->type,
                             'page' => $user->page->name,
-                            'referer_id' => $user->referer_id
+                            'referer_id' => $user->referer_id,
+			    'refer_code' => $hashids->encode($user->id),
                         ];
                     }
                 }
@@ -95,7 +146,8 @@ class UserController extends Controller
                         'email' => $user->email,
                         'dolares' => $user->dolares,
                         'user_types_id' => $user->user_types_id,
-                        'pages_id' => $user->pages_id
+                        'pages_id' => $user->pages_id,
+			'refer_code' => $hashids->encode($user->id),
                     ];
                 }
             }
@@ -112,6 +164,8 @@ class UserController extends Controller
 
     public function bloggerStore(Request $request){
         $user = new \App\User;
+	$key = env("APP_KEY");
+        $hashids = new Hashids($key, 10);
 
         if(
             \JWTAuth::getToken() && 
@@ -134,11 +188,13 @@ class UserController extends Controller
                 if($user->email != false)
                 {
                   $user->name = $request->name;
-                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->password = \Hash::make($request->password);
                   $user->dolares = 0;
                   $user->user_types_id = 2;
                   $user->pages_id = 1;
+		  if(!empty($request->referer)){
+                        $user->referer_id = $hashids->decode($request->referer)[0];
+                  }
                   $user->save();
                 }
                 else{
@@ -167,6 +223,8 @@ class UserController extends Controller
 
     public function adminStore(Request $request){
         $user = new \App\User;
+	$key = env("APP_KEY");
+        $hashids = new Hashids($key, 10);
 
         if(
             \JWTAuth::getToken() && 
@@ -187,11 +245,13 @@ class UserController extends Controller
                 if($user->email != false)
                 {
                   $user->name = $request->name;
-                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->password = \Hash::make($request->password);
                   $user->dolares = $request->dolares;
                   $user->user_types_id = $request->user_types_id;
                   $user->pages_id = 1;
+		  if(!empty($request->referer)){
+                        $user->referer_id = $hashids->decode($request->referer)[0];
+                  }
                   $user->save();
                 }
                 else{
@@ -221,6 +281,8 @@ class UserController extends Controller
     public function facebookStore(Request $request)
     {
         $user = new \App\User;
+	$key = env("APP_KEY");
+        $hashids = new Hashids($key, 10);
 
         if(
             !empty($request->name) && 
@@ -240,10 +302,12 @@ class UserController extends Controller
                 if($user->email != false)
                 {
                   $user->name = $request->name;
-                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->dolares = 0;
                   $user->user_types_id = 3;
                   $user->pages_id = 2;
+		  if(!empty($request->referer)){
+                        $user->referer_id = $hashids->decode($request->referer)[0];
+                  }
                   $user->save();
                 }
                 else{
@@ -274,6 +338,8 @@ class UserController extends Controller
     public function gmailStore(Request $request)
     {
         $user = new \App\User;
+	$key = env("APP_KEY");
+        $hashids = new Hashids($key, 10);
 
         if(
             !empty($request->name) && 
@@ -293,10 +359,12 @@ class UserController extends Controller
                 if($user->email != false)
                 {
                   $user->name = $request->name;
-                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->dolares = 0;
                   $user->user_types_id = 3;
                   $user->pages_id = 3;
+		  if(!empty($request->referer)){
+                        $user->referer_id = $hashids->decode($request->referer)[0];
+                  }
                   $user->save();
                 }
                 else{
@@ -333,6 +401,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = new \App\User;
+	$key = env("APP_KEY");
+        $hashids = new Hashids($key, 10);
 
         if(
             !empty($request->password) && 
@@ -353,11 +423,13 @@ class UserController extends Controller
                 if($user->email != false)
                 {
                   $user->name = $request->name;
-                  if(!empty($request->referer_id)){$user->referer_id = $request->referer_id;}
                   $user->password = \Hash::make($request->password);
                   $user->dolares = 0;
                   $user->user_types_id = 3;
                   $user->pages_id = 1;
+		  if(!empty($request->referer)){
+		  	$user->referer_id = $hashids->decode($request->referer)[0];
+		  }
                   $user->save();
                 }
                 else{
@@ -400,6 +472,9 @@ class UserController extends Controller
 
             $user = \App\User::find($id);
 
+	    $key = env("APP_KEY");
+            $hashids = new Hashids($key, 10);	
+
             if(empty($user))
             {
                 $response = [
@@ -415,7 +490,8 @@ class UserController extends Controller
                     'dolares' => $user->dolares,
                     'user_types_id' => $user->user_types_id,
                     'pages_id' => $user->pages_id,
-                    'referer_id' => $user->referer_id
+                    'referer_id' => $user->referer_id,
+		    'refer_code' => $hashids->encode($user->id),
                 ];
             }
         }

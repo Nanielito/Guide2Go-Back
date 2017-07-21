@@ -96,7 +96,7 @@ class AudioController extends Controller
                 // puede descargar ese audio
 
                 // Busca el audio en la base de datos, esto hay q cambiarlo
-                $file = Audio::all()->where('parada_id',$id)->first();
+                $file = Audio::all()->where('parada_id',$id);
 
                 if (!$file) {
                         $response = [ 'error' => "No se encontro el audio" ];
