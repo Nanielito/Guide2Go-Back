@@ -11,38 +11,38 @@ use \App\Parada;
 class ParadaController extends Controller
 {
 
-    public function paradaSubZone($id)
-    {
-        return Parada::all()->where('sub_zonas_id',$id);
-    }
+	public function paradaSubZone($id)
+	{
+		return Parada::all()->where('sub_zonas_id',$id);
+	}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return Parada::with('subZona')->get();
-    }
+	/**
+	 * Display a listing of the resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function index()
+	{
+		return Parada::with('subZona')->get();
+	}
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		//
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
 	{
 		// Verifica si es un admin
 		if (!JWTHelper::fromUserType(1)) {
@@ -51,7 +51,7 @@ class ParadaController extends Controller
 		}
 
 		$json = $request->json()->all();
-	
+
 		$subz  = $json['subzone'];
 		$catg  = $json['category'];
 		$name  = $json['name'];
@@ -70,61 +70,61 @@ class ParadaController extends Controller
 
 		$response = $stop->jsonSerialize();
 		return \Response::json($response, 200);
-    }
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function show($id)
+	{
+		//
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+	/**
+	 * Show the form for editing the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+		//
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $statusCode = 200;
-        $parada = Parada::find($id);
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		$statusCode = 200;
+		$parada = Parada::find($id);
 
-        if(!empty($request->name)) $parada->nombre = $request->name;
-        if(!empty($request->description)) $parada->descripcion = $request->description;
-        if(!empty($request->point)) $parada->punto = Point::fromArray($request->point);
-	if(!empty($request->subzone)) $parada->sub_zonas_id = $request->subzone;
-	if(!empty($request->category)) $parada->categoria_id = $request->category;
-	if(!empty($request->meters)) $parada->meters = $request->meters;
-        $parada->save();
+		if(!empty($request->name)) $parada->nombre = $request->name;
+		if(!empty($request->description)) $parada->descripcion = $request->description;
+		if(!empty($request->point)) $parada->punto = Point::fromArray($request->point);
+		if(!empty($request->subzone)) $parada->sub_zonas_id = $request->subzone;
+		if(!empty($request->category)) $parada->categoria_id = $request->category;
+		if(!empty($request->meters)) $parada->meters = $request->meters;
+		$parada->save();
 
-        return \Response::json($parada, $statusCode);
-    }
+		return \Response::json($parada, $statusCode);
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+	}
 }

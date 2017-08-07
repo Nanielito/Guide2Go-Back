@@ -6,14 +6,14 @@ use ElevenLab\GeoLaravel\Eloquent\Model as GeoModel;
 
 class Sub_zona extends GeoModel
 {
-    protected $geometries = [
+	protected $geometries = [
 
-    	"polygons" => ['poligono']
-    
-    ];
+		"polygons" => ['poligono']
 
-    public function paradas() {
-    	return $this->hasMany('App\Parada', 'sub_zonas_id');
+	];
+
+	public function paradas() {
+		return $this->hasMany('App\Parada', 'sub_zonas_id');
 	}
 
 	public function zona() {
@@ -27,7 +27,7 @@ class Sub_zona extends GeoModel
 	 * @return Zona
 	 */
 	public static function store($args) {
-		
+
 		$subz = new Sub_zona;
 		$subz->zonas_id = $args['zone'];
 		$subz->nombre = $args['name'];

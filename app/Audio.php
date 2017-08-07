@@ -18,7 +18,7 @@ class Audio extends Model
 	 * @return Audio
 	 */
 	public static function store($args) {
-		
+
 		$aud = new Audio;
 		$aud->parada_id  = $args['spot'];
 		$aud->idiomas_id = $args['lang'];

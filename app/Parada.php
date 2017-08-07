@@ -6,18 +6,18 @@ use ElevenLab\GeoLaravel\Eloquent\Model as GeoModel;
 
 class Parada extends GeoModel
 {
-    protected $geometries = [
-    	'points' => ['punto']
-    ];
+	protected $geometries = [
+		'points' => ['punto']
+	];
 
-    public function subZona() {
-    	return $this->belongsTo('App\Sub_zona', 'sub_zonas_id');
+	public function subZona() {
+		return $this->belongsTo('App\Sub_zona', 'sub_zonas_id');
 	}
 
 	public function audios() {
-	   return $this->hasMany('App\Audio', 'parada_id');	
+		return $this->hasMany('App\Audio', 'parada_id');	
 	}
-	
+
 	/**
 	 * Crear una parada en la base de datos
 	 *
@@ -25,7 +25,7 @@ class Parada extends GeoModel
 	 * @return Parada
 	 */
 	public static function store($args) {
-		
+
 		$stop = new Parada;
 		$stop->sub_zonas_id = $args['subzone'];
 		$stop->categoria_id = $args['category'];

@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categoria extends Model
 {
-    protected $table = 'categoria_paradas';
+	protected $table = 'categoria_paradas';
 
-    public static function store($name) {
+	public static function store($name) {
 
-    	$cat = new Categoria;
-    	$cat->nombre = $name;
-    	$cat->save();
+		$cat = new Categoria;
+		$cat->nombre = $name;
+		$cat->save();
 
-    }
+	}
 }

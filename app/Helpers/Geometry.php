@@ -6,7 +6,7 @@ use ElevenLab\PHPOGC\DataTypes\Point as Point;
 use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
 
 class Geometry {
-	
+
 	/**
 	 * Uses faker factory 
 	 * @return [lat, lng]
@@ -24,7 +24,7 @@ class Geometry {
 	}
 
 	public static function randomPolygon($max = 1, $min = 1) {
-    	$points = [];
+		$points = [];
 		$maxPoints = rand() % ($max - $min + 1) + $min;
 
 		for ($i=0; $i < $maxPoints; $i++) {
@@ -35,7 +35,7 @@ class Geometry {
 		array_push($points, $points[0]);
 
 		return Polygon::fromArray([$points]);
-    }
+	}
 }
 
 ?>

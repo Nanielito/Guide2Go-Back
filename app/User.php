@@ -40,7 +40,7 @@ class User extends Authenticatable
 	}
 
 	/* Helper method to store from google info */
-	public function googleStore($attr) {
+	public static function googleStore($attr) {
 
 		$user = new \App\User;
 		$user->email = $attr['email'];
