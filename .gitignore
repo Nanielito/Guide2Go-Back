@@ -16,3 +16,6 @@ bootstrap/cache/
 
 # Vim Swap files
 *.swp
+
+# Simbolic link	
+public/audios

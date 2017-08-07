@@ -14,11 +14,14 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+	return $request->user();
 });
 
 /* Login */
 Route::post('/login','LoginController@validationGuide')
+	->middleware('cors');
+
+Route::post('/login/google', 'LoginController@validateGoogle')
 	->middleware('cors');
 
 /* Users */
@@ -28,11 +31,14 @@ Route::group(['middleware' => 'cors'], function() {
 	Route::post('user/guia', 'UserController@guiaLink');
 	Route::post('user/admin', 'UserController@adminStore');
 	Route::post('user/blogger', 'UserController@bloggerStore');
+
+	// Shitty
 	Route::post('user/facebook', 'UserController@facebookStore');
-	Route::post('user/gmail', 'UserController@gmailStore');
+	Route::post('user/gmail', 'UserController@gmailStore'); // This shit
+
 	Route::resource('user', 'UserController', [
-			'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
-			'parameters' => ['user' => 'id']
+		'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
+		'parameters' => ['user' => 'id']
 	]);
 
 });
