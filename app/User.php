@@ -16,7 +16,7 @@ class User extends Authenticatable
 	 */
 	protected $fillable = [
 		'name', 'email', 'password', 'user_types_id', 'pages_id'
-	];
+		];
 
 	/**
 	 * The attributes that should be hidden for arrays.
@@ -25,7 +25,7 @@ class User extends Authenticatable
 	 */
 	protected $hidden = [
 		'password', 'remember_token',
-	];
+		];
 
 	public function user_type() {
 		return $this->belongsTo('App\User_type', 'user_types_id');
@@ -43,18 +43,18 @@ class User extends Authenticatable
 	public static function googleStore($attr) {
 
 		$user = new \App\User;
-		$user->email = $attr['email'];
-		$user->name = $attr['name'];
-		$user->dolares = $attr['dolares'] ? : 0;
+		$user->email 			= $attr['email'];
+		$user->name 			= $attr['name'];
+		$user->referer_id = $attr['referer_id']; // Null ?
 
 		// Estos deberian ser por defecto
-		$user->user_types_id = $attr['user_types_id'] ? : 3;
-		$user->pages_id = $attr['pages_id'] ? : 3;
+		$user->dolares 				= 0;
+		$user->user_types_id 	= 3; // 3 deberia corresponder a usuario normal
+		$user->pages_id 			= 3; // 3 deberia corresponder a Google
 
-		// Null ?
-		$user->referer_id = $attr['referer_id'] ? : null;
 		$user->save();
 
 	}
+
 }
 

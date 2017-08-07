@@ -44,7 +44,7 @@ class LoginController extends Controller
 
 		$customClaims = [
 			'sub' => $user->id, 
-			'user_type' => $user->type,
+			'user_type' => $user->user_types_id,
 			'name' => $user->name
 		];
 
@@ -109,6 +109,7 @@ class LoginController extends Controller
 
 		if (empty($user)) {
 			$referer_id = $request->referer_id;
+			$referer_id = empty($referer_id) ? : null;
 			$user = \App\User::googleStore(
 				compact('email', 'name', 'referer_id')
 			);
