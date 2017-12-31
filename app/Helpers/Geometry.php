@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use ElevenLab\PHPOGC\DataTypes\LineString;
 use ElevenLab\PHPOGC\DataTypes\Point as Point;
 use ElevenLab\PHPOGC\DataTypes\Polygon as Polygon;
 
@@ -36,6 +37,31 @@ class Geometry {
 
 		return Polygon::fromArray([$points]);
 	}
-}
 
-?>
+	public static function createPoint($latitude, $longitude) {
+		return Point::fromArray([$latitude, $longitude]);
+	}
+
+	public static function isInside(Point $location, Point $currentLocation, $radius) {
+        $x = $location->long;
+        $y = $location->lat;
+        $circleX = $currentLocation->long;
+        $circleY = $currentLocation->lat;
+
+		return (($x - $circleX) * ($x - $circleX) + ($y - $circleY) * ($y - $circleY) <= $radius * $radius) ? true : false;
+	}
+
+	public static function isLocationNear(Polygon $region, Point $location, $radius) {
+		$isNear = false;
+        $points = $region->linestrings[0]->points;
+
+		foreach ($points as $point) {
+			if (self::isInside($point, $location, $radius)) {
+				$isNear = true;
+				break;
+			}
+		}
+
+		return $isNear;
+	}
+}
