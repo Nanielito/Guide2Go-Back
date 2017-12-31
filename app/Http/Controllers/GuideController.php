@@ -6,15 +6,16 @@ use Illuminate\Http\Request;
 
 use \App\Helpers\JWTHelper;
 use \App\Guia;
-use \APp\User;
+use \App\User;
 
-class GuideController extends Controller
-{
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
+class GuideController extends Controller {
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
 	public function index(Request $request)
 	{
 		// Retorna un usuario del token
@@ -66,97 +67,317 @@ class GuideController extends Controller
 	}
 
 	/**
-	 * Show the form for creating a new resource.
+	 * Shows the form for creating a new "Guia" resource.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function create()
-	{
+	public function create() {
 		//
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Stores a newly created "Guia" resource in storage.
 	 *
-	 * @param  \Illuminate\Http\Request  $request
+	 * @param \Illuminate\Http\Request $request
+     *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function store(Request $request)
-	{
-		$params = [
-			'zone' => $request->zone,
-			'lang' => $request->lang,
-			'cost' => $request->cost,
+	public function store(Request $request) {
+		$parameters = [
+			'zone'        => $request->zone,
+			'lang'        => $request->lang,
+            'name'        => $request->name,
+            'description' => $request->description,
+			'cost'        => $request->cost,
 		];
 
-		// Crea una guia en la base de datos
-		$guide = Guia::store($params);
+		$guide = Guia::createGuia($parameters);
 
-		$response = $guide->jsonSerialize();
-		return \Response::json($response, 200);
-	}
+		if (isset($guide)) {
+            $response = $guide->jsonSerialize();
+            $statusCode = 200;
+        }
+        else {
+		    $response = [
+		        "error" => "Ha ocurrido un error al crear la guia"
+            ];
+		    $statusCode = 500;
+        }
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show($id)
-	{
-		//
-	}
-
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit($id)
-	{
-		//
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  int  $id
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, $id)
-	{
-
-		if(\JWTAuth::getToken()){
-			$response = [
-				"respuesta" => "Actualizado con exito"
-			];
-			$statusCode = 200;
-			$guide = \App\Guia::find($id);
-
-			$guide->zonas_id = $request->zone;
-			$guide->idiomas_id = $request->lang;
-			$guide->costo = $request->cost;
-			$guide->save();
-		}
-		else{
-			$response = [
-				"error" => "Sin Autorizacion"
-			];
-			$statusCode = 403;
-		}
 		return \Response::json($response, $statusCode);
 	}
 
 	/**
-	 * Remove the specified resource from storage.
+	 * Displays the specified "Guia" resource.
 	 *
-	 * @param  int  $id
+	 * @param int $id
+     *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy($id)
-	{
+	public function show($id) {
+		//
+	}
+
+    /**
+     * Gets all "Guia" resources.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGuides(Request $request) {
+        $response = [];
+        $language = $request->input("language");
+        $zone = $request->input("zone");
+
+        try {
+            $fromUser = JWTHelper::authenticate();
+
+            if (isset($fromUser)) {
+            	if (isset($language) && !isset($zone)) {
+            		$guides = \App\Guia::where("idiomas_id", $language)->get();
+				}
+				elseif (!isset($language) && isset($zone)) {
+                    $guides = \App\Guia::where("zonas_id", $zone)->get();
+				}
+				elseif (isset($language) && isset($zone)) {
+                    $guides = \App\Guia::whereRaw("idiomas_id = $language AND zonas_id = $zone")->get();
+				}
+				else {
+                    $guides = \App\Guia::all();
+				}
+
+                foreach ($guides as $guide) {
+                    $zone = \App\Zona::find($guide->zonas_id);
+                    $language = \App\Idioma::find($guide->idiomas_id);
+
+                    $response[] = [
+                        "id" => $guide->id,
+                        "nombre" => $guide->nombre,
+                        "descripcion" => $guide->descripcion,
+                        "costo" => $guide->costo,
+                        "idioma" => [
+                        	"id" => $language->id,
+                        	"name" => $language->name
+						],
+                        "zona" => [
+                        	"id" => $zone->id,
+							"name" => $zone->name
+						]
+                    ];
+                }
+
+                $statusCode = 200;
+            }
+            else {
+                $response = [
+                    "error" => "Not Authorized"
+                ];
+                $statusCode = 401;
+            }
+        }
+        catch (\Exception $ex) {
+            $response = [
+                "error" => $ex->getMessage()
+            ];
+            $statusCode = 500;
+        }
+
+        return \Response::json($response, $statusCode);
+    }
+
+    /**
+     * Gets "Guia" resources by position.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param float $latitude
+     * @param float $longitude
+     * @param float $radius
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGuidesByPosition(Request $request, $latitude, $longitude, $radius) {
+		$response = [];
+        $language = $request->input("language");
+
+        try {
+            $fromUser = JWTHelper::authenticate();
+
+            if (isset($fromUser)) {
+                $zones = \App\Zona::all()->filter(function ($zone) use ($latitude, $longitude, $radius) {
+                    $region = $zone["poligono"];
+                	return \App\Helpers\Geometry::isLocationNear($region, \App\Helpers\Geometry::createPoint($latitude, $longitude), $radius);
+				});
+
+                $zoneIds = $zones->reduce(function ($accumulator, $zone) {
+                	$accumulator[] = $zone->id;
+                	return $accumulator;
+				}, []);
+
+                if (count($zoneIds) > 0) {
+                    $bindingsString = implode(",", $zoneIds);
+
+                    if (isset($language)) {
+                        $guides = \App\Guia::whereRaw("idiomas_id = $language AND zonas_id IN ($bindingsString)")->get();
+                    } else {
+                        $guides = \App\Guia::whereRaw("zonas_id IN ($bindingsString)")->get();
+                    }
+
+                    foreach ($guides as $guide) {
+                        $zone = $zones->find($guide->zonas_id);
+                        $language = \App\Idioma::find($guide->idiomas_id);
+
+                        $response[] = [
+                            "id" => $guide->id,
+                            "nombre" => $guide->nombre,
+                            "descripcion" => $guide->descripcion,
+                            "costo" => $guide->costo,
+                            "idioma" => [
+                                "id" => $language->id,
+                                "name" => $language->name
+                            ],
+                            "zona" => [
+                                "id" => $zone->id,
+                                "name" => $zone->name
+                            ]
+                        ];
+                    }
+                }
+
+                $statusCode = 200;
+            }
+            else {
+                $response = [
+                    "error" => "Not Authorized"
+                ];
+                $statusCode = 401;
+            }
+        }
+        catch (\Exception $ex) {
+            $response = [
+                "error" => $ex->getMessage()
+            ];
+            $statusCode = 500;
+        }
+
+		return \Response::json($response, $statusCode);
+    }
+
+    /**
+     * Gets the specified "Guia" resource.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getGuide(Request $request, $id) {
+        $response = [];
+
+        try {
+            $fromUser = JWTHelper::authenticate();
+
+            if (isset($fromUser)) {
+                $guide = \App\Guia::find($id);
+                $zone = \App\Zona::find($guide->zonas_id);
+                $language = \App\Idioma::find($guide->idiomas_id);
+
+				$response = [
+					"id" => $guide->id,
+					"nombre" => $guide->nombre,
+					"descripcion" => $guide->descripcion,
+					"costo" => $guide->costo,
+					"idioma" => [
+						"id" => $language->id,
+						"name" => $language->name
+					],
+					"zona" => [
+						"id" => $zone->id,
+						"name" => $zone->name
+					]
+				];
+
+                $statusCode = 200;
+            }
+            else {
+                $response = [
+                    "error" => "Not Authorized"
+                ];
+                $statusCode = 401;
+            }
+        }
+        catch (\Exception $ex) {
+            $response = [
+                "error" => $ex->getMessage()
+            ];
+            $statusCode = 500;
+        }
+
+    	return \Response::json($response, $statusCode);
+    }
+
+	/**
+	 * Shows the form for editing the specified "Guia" resource.
+	 *
+	 * @param int $id
+     *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id) {
+		//
+	}
+
+	/**
+	 * Updates the specified "Guia" resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request $request
+	 * @param  int  $id
+     *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id) {
+		if (\JWTAuth::getToken()) {
+			$parameters = [
+                'zone'        => $request->zone,
+                'lang'        => $request->lang,
+                'name'        => $request->name,
+                'description' => $request->description,
+                'cost'        => $request->cost,
+            ];
+
+			$guide = Guia::updateGuia($id, $parameters);
+
+			if (isset($guide)) {
+                $response = $guide->jsonSerialize();
+                $statusCode = 200;
+            }
+            else {
+                $response = [
+                    "respuesta" => "Recurso no encontrado"
+                ];
+                $statusCode = 404;
+            }
+		}
+		else {
+			$response = [
+				"error" => "Sin Autorizacion"
+			];
+			$statusCode = 401;
+		}
+
+		return \Response::json($response, $statusCode);
+	}
+
+	/**
+	 * Removes the specified "Guia" resource from storage.
+	 *
+	 * @param int $id
+     *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id) {
 		//
 	}
 }
+
+?>

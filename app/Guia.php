@@ -18,15 +18,32 @@ class Guia extends Model
 		return $this->belongsTo('App\Idioma', 'idiomas_id');
 	}
 
-	public static function store($args) {
-
+	public static function createGuia($parameters) {
 		$guide = new Guia;
-		$guide->zonas_id   = $args['zone'];
-		$guide->idiomas_id = $args['lang'];
-		$guide->costo      = $args['cost'];
-		$guide->save();
 
-		return $guide;
+		$guide->zonas_id    = $parameters['zone'];
+		$guide->idiomas_id  = $parameters['lang'];
+		$guide->nombre      = $parameters['name'];
+		$guide->descripcion = $parameters['description'];
+		$guide->costo       = $parameters['cost'];
+
+		return $guide->save() ? $guide : null;
 	}
+
+	public static function updateGuia($id, $parameters) {
+        $guide = Guia::find($id);
+
+        if (isset($guide)) {
+            $guide->zonas_id    = $parameters['zone'];
+            $guide->idiomas_id  = $parameters['lang'];
+            $guide->nombre      = $parameters['name'];
+            $guide->descripcion = $parameters['description'];
+            $guide->costo       = $parameters['cost'];
+
+            $guide->update();
+        }
+
+        return $guide;
+    }
 }
 

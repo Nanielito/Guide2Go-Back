@@ -40,7 +40,6 @@ Route::group(['middleware' => 'cors'], function() {
 		'only' => ['show', 'store' , 'update', 'destroy', 'index'], 
 		'parameters' => ['user' => 'id']
 	]);
-
 });
 
 Route::get('tokenexp', 'UserController@tokenexp');
@@ -58,8 +57,23 @@ Route::get('parada/sub_zone/{id}', 'ParadaController@paradaSubZone');
 /* Zonas */
 Route::resource('zona', 'ZoneController');
 
-/* Guias */
+/* ############################################################################ */
+/* # Guias                                                                    # */
+/* ############################################################################ */
 Route::resource('guia', 'GuideController');
+
+//http://URL/api/guides
+//http://URL/api/guides?language=1&zone=42
+//http://URL/api/guides?language=1
+//http://URL/api/guides?zone=42
+Route::get('guides', 'GuideController@getGuides');
+
+//http://URL/api/guides/80/-62/1
+//http://URL/api/guides/80/-62/1?language=1
+Route::get('guides/{latitude}/{longitude}/{radius}', 'GuideController@getGuidesByPosition');
+
+Route::get('guides/{id}', 'GuideController@getGuide');
+/* ############################################################################ */
 
 /* Paradas */
 Route::resource('parada', 'ParadaController');
