@@ -23,16 +23,18 @@ $factory->define(App\Zona::class, function (Faker\Generator $faker) {
 	];
 });
 
-$factory->define(App\Guia::class, function () {
+$factory->define(App\Guia::class, function (Faker\Generator $faker) {
 
 	/* :( */
 	$zone = App\Zona::inRandomOrder()->first()->id;
 	$lang = App\Idioma::inRandomOrder()->first()->id;
 
 	return [
-		'costo' => rand() % 1000,
 		'zonas_id' => $zone,
-		'idiomas_id' => $lang
+		'idiomas_id' => $lang,
+        'nombre' => $faker->unique()->streetName,
+        'descripcion' => $faker->paragraph(3, true),
+        'costo' => rand() % 1000
 	];
 
 });
