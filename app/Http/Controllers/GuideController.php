@@ -215,12 +215,13 @@ class GuideController extends Controller {
 				}, []);
 
                 if (count($zoneIds) > 0) {
-                    $bindingsString = implode(",", $zoneIds);
+                    $stringIds = implode(",", $zoneIds);
 
                     if (isset($language)) {
-                        $guides = \App\Guia::whereRaw("idiomas_id = $language AND zonas_id IN ($bindingsString)")->get();
-                    } else {
-                        $guides = \App\Guia::whereRaw("zonas_id IN ($bindingsString)")->get();
+                        $guides = \App\Guia::whereRaw("idiomas_id = $language AND zonas_id IN ($stringIds)")->get();
+                    }
+                    else {
+                        $guides = \App\Guia::whereRaw("zonas_id IN ($stringIds)")->get();
                     }
 
                     foreach ($guides as $guide) {
